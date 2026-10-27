@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#1A2639"/>
+      <stop offset="70%" stop-color="#0B132B"/>
+      <stop offset="100%" stop-color="#050914"/>
+    </radialGradient>
+
+    <!-- Rich Metallic Gold Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF2A3"/>
+      <stop offset="25%" stop-color="#E5C158"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="75%" stop-color="#AA7C11"/>
+      <stop offset="100%" stop-color="#6E4D05"/>
+    </linearGradient>
+
+    <!-- Subtle Gold Highlight -->
+    <linearGradient id="goldLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFBEB"/>
+      <stop offset="50%" stop-color="#FDE68A"/>
+      <stop offset="100%" stop-color="#D4AF37"/>
+    </linearGradient>
+
+    <!-- Emerald Roofing Green -->
+    <linearGradient id="roofGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E"/>
+      <stop offset="40%" stop-color="#15803D"/>
+      <stop offset="100%" stop-color="#0D4A22"/>
+    </linearGradient>
+
+    <!-- Glass Pane Gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE"/>
+      <stop offset="45%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+
+    <!-- Shield Face Gradient -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="35%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </linearGradient>
+
+    <!-- Shadow Filter -->
+    <filter id="dropShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- ================= BASE MEDALLION ================= -->
+  <!-- Outer Gold Rim -->
+  <circle cx="260" cy="260" r="250" fill="url(#bgGrad)" stroke="url(#goldGrad)" stroke-width="7" filter="url(#dropShadow)"/>
+  
+  <!-- Concentric Inner Beaded Accent Ring -->
+  <circle cx="260" cy="260" r="241" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-opacity="0.6" stroke-dasharray="4,4"/>
+  <circle cx="260" cy="260" r="236" fill="none" stroke="#D4AF37" stroke-width="0.8" stroke-opacity="0.4"/>
+
+  <!-- ================= TOP ARCHITECTURAL ROOF CROWN ================= -->
+  <g id="roof-structure" filter="url(#dropShadow)">
+    <!-- Triple Crown Crest Points -->
+    <path d="M 235,58 L 245,35 L 260,48 L 275,35 L 285,58 Z" fill="url(#goldGrad)" stroke="#8A6407" stroke-width="1"/>
+    
+    <!-- Central Gabled Roof -->
+    <polygon points="260,54 395,125 380,136 260,74 140,136 125,125" fill="url(#roofGreen)" stroke="#062e15" stroke-width="1.5"/>
+    <polygon points="260,74 380,136 140,136" fill="url(#roofGreen)" opacity="0.95"/>
+
+    <!-- Left & Right Sub-Gables -->
+    <polygon points="175,102 120,132 175,132" fill="#145931" opacity="0.85"/>
+    <polygon points="345,102 400,132 345,132" fill="#145931" opacity="0.85"/>
+
+    <!-- Ridge Cap & Corrugations -->
+    <line x1="260" y1="74" x2="160" y2="136" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.8"/>
+    <line x1="260" y1="74" x2="195" y2="136" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.8"/>
+    <line x1="260" y1="74" x2="230" y2="136" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.8"/>
+    <line x1="260" y1="74" x2="290" y2="136" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.8"/>
+    <line x1="260" y1="74" x2="325" y2="136" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.8"/>
+    <line x1="260" y1="74" x2="360" y2="136" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.8"/>
+
+    <!-- Chimney Flue -->
+    <rect x="330" y="65" width="18" height="26" fill="url(#roofGreen)" stroke="#062e15" stroke-width="1.2"/>
+    <rect x="328" y="62" width="22" height="4" fill="url(#goldGrad)" rx="1"/>
+  </g>
+
+  <!-- ================= FLANKING CASEMENT WINDOWS ================= -->
+  <!-- Left Casement Window -->
+  <g id="left-window" filter="url(#dropShadow)">
+    <rect x="75" y="150" width="65" height="135" rx="3" fill="#0B132B" stroke="url(#goldGrad)" stroke-width="3"/>
+    <!-- Panes -->
+    <rect x="80" y="155" width="25" height="58" rx="2" fill="url(#glassGrad)" stroke="#1E293B" stroke-width="1.5"/>
+    <rect x="110" y="155" width="25" height="58" rx="2" fill="url(#glassGrad)" stroke="#1E293B" stroke-width="1.5"/>
+    <rect x="80" y="218" width="25" height="61" rx="2" fill="url(#glassGrad)" stroke="#1E293B" stroke-width="1.5"/>
+    <rect x="110" y="218" width="25" height="61" rx="2" fill="url(#glassGrad)" stroke="#1E293B" stroke-width="1.5"/>
+    <!-- Glass Glare Lines -->
+    <path d="M 83,160 L 98,205" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    <path d="M 113,160 L 128,205" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+  <!-- Right Sliding Window -->
+  <g id="right-window" filter="url(#dropShadow)">
+    <rect x="380" y="150" width="65" height="135" rx="3" fill="#0B132B" stroke="url(#goldGrad)" stroke-width="3"/>
+    <!-- Panes -->
+    <rect x="385" y="155" width="25" height="58" rx="2" fill="url(#glassGrad)" stroke="#1E293B" stroke-width="1.5"/>
+    <rect x="415" y="155" width="25" height="58" rx="2" fill="url(#glassGrad)" stroke="#1E293B" stroke-width="1.5"/>
+    <rect x="385" y="218" width="25" height="61" rx="2" fill="url(#glassGrad)" stroke="#1E293B" stroke-width="1.5"/>
+    <rect x="415" y="218" width="25" height="61" rx="2" fill="url(#glassGrad)" stroke="#1E293B" stroke-width="1.5"/>
+    <!-- Glass Glare Lines -->
+    <path d="M 388,160 L 403,205" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    <path d="M 418,160 L 433,205" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+  <!-- ================= CENTER HERALDIC SHIELD WITH "SAFE" ================= -->
+  <g id="center-shield" filter="url(#dropShadow)">
+    <!-- Crossed Golden Tools Behind Shield -->
+    <!-- Tool 1: Wrench -->
+    <g transform="rotate(45 260 215)">
+      <rect x="254" y="125" width="12" height="110" rx="3" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.2"/>
+      <circle cx="260" cy="130" r="16" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.2"/>
+      <rect x="254" y="118" width="12" height="14" fill="#0F172A"/>
+    </g>
+    <!-- Tool 2: Hammer -->
+    <g transform="rotate(-45 260 215)">
+      <rect x="254" y="125" width="12" height="110" rx="3" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.2"/>
+      <polygon points="244,124 276,124 274,136 246,136" fill="#475569" stroke="#1E293B" stroke-width="1.2"/>
+      <rect x="242" y="118" width="36" height="12" rx="2" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.2"/>
+    </g>
+
+    <!-- Outer Gold Heraldic Shield -->
+    <path d="M 260,118 Q 360,132 360,205 C 360,285 260,345 260,345 C 260,345 160,285 160,205 Q 160,132 260,118 Z" 
+          fill="url(#goldGrad)" stroke="#6E4D05" stroke-width="3"/>
+
+    <!-- Inner Polished Shield Face -->
+    <path d="M 260,126 Q 348,138 348,205 C 348,276 260,332 260,332 C 260,332 172,276 172,205 Q 172,138 260,126 Z" 
+          fill="url(#shieldGrad)" stroke="#CBD5E1" stroke-width="1.5"/>
+
+    <!-- Gold Inset Border -->
+    <path d="M 260,134 Q 338,145 338,205 C 338,268 260,318 260,318 C 260,318 182,268 182,205 Q 182,145 260,134 Z" 
+          fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+
+    <!-- Acanthus Scroll Leaves -->
+    <path d="M 195,160 Q 215,185 205,215" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 325,160 Q 305,185 315,215" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Central Word: SAFE -->
+    <text x="260" y="235" font-family="'Cinzel', 'Times New Roman', Georgia, serif" font-size="52" font-weight="900" fill="#0B132B" letter-spacing="4" text-anchor="middle" filter="url(#dropShadow)">
+      SAFE
+    </text>
+    <text x="260" y="258" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="10.5" font-weight="800" fill="#B45309" letter-spacing="3" text-anchor="middle">
+      PRECISION FITTINGS
+    </text>
+  </g>
+
+  <!-- ================= RIBBON BANNER: SIRDILUM ALUMINUM ================= -->
+  <g id="ribbon-banner" filter="url(#dropShadow)">
+    <!-- Ribbon Left & Right Tails -->
+    <polygon points="50,370 100,345 100,395 50,420 68,395" fill="#78350F" stroke="#451A03" stroke-width="1"/>
+    <polygon points="470,370 420,345 420,395 470,420 452,395" fill="#78350F" stroke="#451A03" stroke-width="1"/>
+
+    <!-- Ribbon Fold Undersides -->
+    <polygon points="95,355 125,355 110,390" fill="#92400E"/>
+    <polygon points="425,355 395,355 410,390" fill="#92400E"/>
+
+    <!-- Main Curved Gold Ribbon Body -->
+    <path d="M 90,358 Q 260,332 430,358 L 420,402 Q 260,376 100,402 Z" 
+          fill="url(#goldGrad)" stroke="#78350F" stroke-width="2.5"/>
+
+    <!-- Ribbon Highlights -->
+    <path d="M 102,364 Q 260,340 418,364" fill="none" stroke="#FFFBEB" stroke-width="1.5" stroke-opacity="0.7"/>
+
+    <!-- Brand Name Text -->
+    <text x="260" y="386" font-family="'Outfit', 'Arial Black', Impact, sans-serif" font-size="28" font-weight="900" fill="#0B132B" letter-spacing="3" text-anchor="middle">
+      SIRDILUM ALUMINUM
+    </text>
+  </g>
+
+  <!-- ================= MOTTO SCROLL BANNER (REQUESTED MOTTO) ================= -->
+  <g id="motto-banner" filter="url(#dropShadow)">
+    <!-- Lower Gold Plaque / Scroll -->
+    <rect x="75" y="420" width="370" height="48" rx="8" fill="url(#goldLight)" stroke="#854D0E" stroke-width="2"/>
+    <rect x="78" y="423" width="364" height="42" rx="6" fill="#0B132B" stroke="#D4AF37" stroke-width="1"/>
+
+    <!-- Scroll Ends / Rolled finials -->
+    <rect x="65" y="423" width="12" height="42" rx="3" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.2"/>
+    <circle cx="71" cy="423" r="5" fill="#FDE68A" stroke="#78350F" stroke-width="1"/>
+    <circle cx="71" cy="465" r="5" fill="#FDE68A" stroke="#78350F" stroke-width="1"/>
+
+    <rect x="443" y="423" width="12" height="42" rx="3" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.2"/>
+    <circle cx="449" cy="423" r="5" fill="#FDE68A" stroke="#78350F" stroke-width="1"/>
+    <circle cx="449" cy="465" r="5" fill="#FDE68A" stroke="#78350F" stroke-width="1"/>
+
+    <!-- Full Legible Motto Text -->
+    <text x="260" y="443" font-family="'Outfit', 'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="800" fill="#FDE68A" text-anchor="middle" letter-spacing="0.5">
+      Motto: &quot;SAFE, STRONG..... high standard, good compromise&quot;
+    </text>
+
+    <!-- Subtitle: CAC Registered Identity -->
+    <text x="260" y="457" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#86EFAC" text-anchor="middle" letter-spacing="1">
+      ★ CRBN 716623 • CAC FEDERAL REPUBLIC OF NIGERIA ★
+    </text>
+  </g>
+</svg>
