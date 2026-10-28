@@ -13,30 +13,114 @@ document.addEventListener('DOMContentLoaded', () => {
   initFAQAccordion();
   initContactForm();
   initSmoothScroll();
+  initScrollSpy();
 });
 
 /* ==========================================================================
-   1. MOBILE NAVIGATION
+   1. RESPONSIVE MOBILE NAVIGATION & HAMBURGER DRAWER
    ========================================================================== */
 function initMobileNav() {
   const toggleBtn = document.getElementById('mobileNavToggle');
-  const navLinks = document.getElementById('navLinks');
+  const drawer = document.getElementById('mobileDrawer');
+  const backdrop = document.getElementById('mobileNavBackdrop');
+  const closeBtn = document.getElementById('drawerCloseBtn');
+  const drawerLinks = document.querySelectorAll('.drawer-nav-link, .drawer-action-btn');
 
-  if (toggleBtn && navLinks) {
-    toggleBtn.addEventListener('click', () => {
-      navLinks.classList.toggle('mobile-open');
-      const isOpen = navLinks.classList.contains('mobile-open');
-      toggleBtn.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
-    });
+  if (!toggleBtn || !drawer || !backdrop) return;
 
-    // Close on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('mobile-open');
-        toggleBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-      });
+  const openDrawer = () => {
+    drawer.classList.add('is-active');
+    backdrop.classList.add('is-active');
+    toggleBtn.classList.add('is-active');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('drawer-open');
+  };
+
+  const closeDrawer = () => {
+    drawer.classList.remove('is-active');
+    backdrop.classList.remove('is-active');
+    toggleBtn.classList.remove('is-active');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('drawer-open');
+  };
+
+  // Toggle button click
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (drawer.classList.contains('is-active')) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
+  });
+
+  // Close button click
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeDrawer();
     });
   }
+
+  // Backdrop click closes drawer
+  backdrop.addEventListener('click', () => {
+    closeDrawer();
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('is-active')) {
+      closeDrawer();
+    }
+  });
+
+  // Close drawer when screen is resized beyond tablet breakpoint (1024px)
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024 && drawer.classList.contains('is-active')) {
+      closeDrawer();
+    }
+  });
+
+  // Close drawer when any internal navigation link is tapped
+  drawerLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeDrawer();
+    });
+  });
+}
+
+/* ==========================================================================
+   SCROLL SPY (ACTIVE NAVIGATION HIGHLIGHTER)
+   ========================================================================== */
+function initScrollSpy() {
+  const sections = document.querySelectorAll('section[id], header[id]');
+  const desktopLinks = document.querySelectorAll('.nav-links .nav-link');
+  const drawerLinks = document.querySelectorAll('.drawer-nav-list .drawer-nav-link');
+
+  if (!sections.length) return;
+
+  const onScroll = () => {
+    const scrollPos = window.scrollY + 120;
+
+    sections.forEach(sec => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      const id = sec.getAttribute('id');
+
+      if (scrollPos >= top && scrollPos < top + height) {
+        desktopLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+        });
+        drawerLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+        });
+      }
+    });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 /* ==========================================================================
