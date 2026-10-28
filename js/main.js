@@ -76,11 +76,14 @@ function initProductCatalog() {
   // 3-Image Thumbnail Switcher for Product Cards
   productCards.forEach(card => {
     const mainImg = card.querySelector('.product-main-img');
+    const badge = card.querySelector('.product-category-badge');
     const thumbs = card.querySelectorAll('.product-thumb');
 
     thumbs.forEach(thumb => {
       const switchImage = () => {
         const targetSrc = thumb.getAttribute('data-src');
+        const badgeText = thumb.getAttribute('data-badge');
+        const badgeIcon = thumb.getAttribute('data-icon') || 'fa-circle-check';
         if (!targetSrc || !mainImg) return;
 
         thumbs.forEach(t => t.classList.remove('active'));
@@ -91,6 +94,9 @@ function initProductCatalog() {
         setTimeout(() => {
           mainImg.src = targetSrc;
           mainImg.style.opacity = '1';
+          if (badge && badgeText) {
+            badge.innerHTML = `<i class="fa-solid ${badgeIcon}"></i> ${badgeText}`;
+          }
         }, 120);
       };
 
