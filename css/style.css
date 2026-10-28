@@ -1365,6 +1365,268 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
+   CUSTOMER REVIEWS & TESTIMONIALS
+   ========================================================================== */
+.reviews-summary-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background: linear-gradient(145deg, #131E3D 0%, #0D142A 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.75rem;
+  box-shadow: var(--shadow-md);
+}
+
+.summary-metric {
+  text-align: center;
+}
+
+.summary-metric-number {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  line-height: 1.1;
+}
+
+.summary-metric-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-silver);
+  margin-top: 0.25rem;
+  letter-spacing: 0.3px;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.testimonial-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: all var(--transition-smooth);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(212, 175, 55, 0.12);
+}
+
+.testimonial-card::before {
+  content: '“';
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-family: Georgia, serif;
+  font-size: 5rem;
+  line-height: 1;
+  color: rgba(212, 175, 55, 0.12);
+  pointer-events: none;
+}
+
+.testimonial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.star-rating {
+  color: var(--color-gold);
+  font-size: 0.95rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.project-tag {
+  background: rgba(21, 128, 61, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #86EFAC;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.testimonial-quote {
+  font-size: 0.98rem;
+  color: var(--color-silver);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+.client-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.25rem;
+}
+
+.client-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-accent-green) 100%);
+  border: 2px solid var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #FFFFFF;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.client-info h4 {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.2rem;
+}
+
+.client-info p {
+  font-size: 0.82rem;
+  color: var(--color-silver-dark);
+}
+
+/* ==========================================================================
+   FREQUENTLY ASKED QUESTIONS ON ANSWERS & POLICIES
+   ========================================================================== */
+.faq-wrapper {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.faq-item {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all var(--transition-smooth);
+}
+
+.faq-item:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.faq-item.active {
+  border-color: var(--color-gold);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 175, 55, 0.15);
+}
+
+.faq-question-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.35rem 1.75rem;
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-size: 1.12rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  gap: 1.25rem;
+  transition: color var(--transition-fast);
+}
+
+.faq-question-btn:hover {
+  color: var(--color-gold);
+}
+
+.faq-item.active .faq-question-btn {
+  color: var(--color-gold);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.faq-icon-indicator {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;
+  color: var(--color-gold);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.faq-item.active .faq-icon-indicator {
+  transform: rotate(180deg);
+  background: var(--color-gold);
+  color: var(--color-primary);
+  border-color: var(--color-gold);
+}
+
+.faq-answer-panel {
+  display: none;
+  padding: 1.5rem 1.75rem;
+  font-size: 0.96rem;
+  color: var(--color-silver);
+  line-height: 1.75;
+  background: rgba(15, 23, 42, 0.7);
+  animation: fadeInFAQ 0.3s ease;
+}
+
+@keyframes fadeInFAQ {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.faq-item.active .faq-answer-panel {
+  display: block;
+}
+
+.policy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+  background: rgba(21, 128, 61, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #86EFAC;
+}
+
+/* ==========================================================================
    CONTACT & WORKSHOP LOCATION
    ========================================================================== */
 .contact-grid {
@@ -1587,6 +1849,11 @@ button, input, select, textarea {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
   }
 
   .footer-grid {
@@ -2083,6 +2350,36 @@ button, input, select, textarea {
   .portal-action-btns .btn {
     width: 100%;
     justify-content: center;
+  }
+
+  /* Testimonials Mobile */
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .testimonial-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .reviews-summary-bar {
+    padding: 1.25rem 1rem;
+    gap: 1.25rem;
+  }
+
+  .summary-metric-number {
+    font-size: 1.8rem;
+  }
+
+  /* Frequently Asked Questions Mobile */
+  .faq-question-btn {
+    padding: 1.15rem 1.25rem;
+    font-size: 1rem;
+  }
+
+  .faq-answer-panel {
+    padding: 1.25rem;
+    font-size: 0.92rem;
   }
 
   /* Contact & Location Mobile */

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductCatalog();
   initFinishVisualizer();
   initBOQEstimator();
+  initFAQAccordion();
   initContactForm();
   initSmoothScroll();
 });
@@ -452,3 +453,34 @@ function initSmoothScroll() {
     });
   });
 }
+
+/* ==========================================================================
+   7. FREQUENTLY ASKED QUESTIONS (FAQ) ACCORDION
+   ========================================================================== */
+function initFAQAccordion() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  if (!faqItems.length) return;
+
+  faqItems.forEach(item => {
+    const questionBtn = item.querySelector('.faq-question-btn');
+    if (!questionBtn) return;
+
+    questionBtn.addEventListener('click', () => {
+      const isAlreadyActive = item.classList.contains('active');
+
+      // Close other items for single-open accordion behavior
+      faqItems.forEach(i => {
+        i.classList.remove('active');
+        const btn = i.querySelector('.faq-question-btn');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+
+      // Toggle current item
+      if (!isAlreadyActive) {
+        item.classList.add('active');
+        questionBtn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+}
+
