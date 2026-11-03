@@ -2473,6 +2473,21 @@ body.drawer-open {
   font-size: 0.85rem;
 }
 
+.footer-copyright-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-cac-statement {
+  font-size: 0.82rem;
+  color: var(--color-silver-dark);
+}
+
+.footer-cac-statement strong {
+  color: var(--color-gold);
+}
+
 /* ==========================================================================
    FLOATING QUICK ACTIONS WIDGET
    ========================================================================== */
