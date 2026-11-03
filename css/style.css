@@ -1050,29 +1050,6 @@ body.drawer-open {
   padding: 0.65rem 1rem;
 }
 
-.showcase-cac-pill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  font-size: 0.72rem;
-  color: #94A3B8;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.35rem 0.6rem;
-  border-radius: var(--radius-pill);
-}
-
-.showcase-cac-pill strong {
-  color: var(--color-gold);
-}
-
-.showcase-cac-pill em {
-  color: #E2E8F0;
-  font-style: normal;
-}
-
 .hero-logo-box {
   background: linear-gradient(145deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
   border: 1px solid rgba(212, 175, 55, 0.35);
