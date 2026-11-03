@@ -7,6 +7,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initMobileNav();
+  initHeroCatalogShowcase();
   initProductCatalog();
   initFinishVisualizer();
   initBOQEstimator();
@@ -124,7 +125,125 @@ function initScrollSpy() {
 }
 
 /* ==========================================================================
-   2. PRODUCT CATALOG FILTERING & 3-IMAGE THUMBNAIL SWITCHER
+   2. HERO MATERIALS CATALOG DYNAMIC SHOWCASE
+   ========================================================================== */
+function initHeroCatalogShowcase() {
+  const showcase = document.getElementById('heroCatalogShowcase');
+  if (!showcase) return;
+
+  const mainImg = document.getElementById('heroShowcaseImg');
+  const catLabel = document.getElementById('heroShowcaseCategory');
+  const titleEl = document.getElementById('heroShowcaseTitle');
+  const specEl = document.getElementById('heroShowcaseSpec');
+  const prevBtn = document.getElementById('heroShowcasePrev');
+  const nextBtn = document.getElementById('heroShowcaseNext');
+  const tabs = Array.from(showcase.querySelectorAll('.showcase-tab'));
+
+  if (!tabs.length || !mainImg) return;
+
+  let currentIndex = 0;
+  let autoTimer = null;
+  let isHovered = false;
+  const cycleInterval = 3500;
+
+  const updateShowcase = (index, immediate = false) => {
+    currentIndex = (index + tabs.length) % tabs.length;
+    const activeTab = tabs[currentIndex];
+    if (!activeTab) return;
+
+    tabs.forEach((t, i) => t.classList.toggle('active', i === currentIndex));
+
+    const src = activeTab.getAttribute('data-src');
+    const cat = activeTab.getAttribute('data-cat') || 'Materials Catalog';
+    const catIcon = activeTab.getAttribute('data-cat-icon') || 'fa-cubes';
+    const title = activeTab.getAttribute('data-title') || '';
+    const spec = activeTab.getAttribute('data-spec') || '';
+
+    if (catLabel) catLabel.innerHTML = `<i class="fa-solid ${catIcon}"></i> ${cat}`;
+    if (titleEl) titleEl.textContent = title;
+    if (specEl) specEl.textContent = spec;
+
+    if (immediate) {
+      mainImg.src = src;
+    } else {
+      mainImg.style.opacity = '0.35';
+      setTimeout(() => {
+        mainImg.src = src;
+        mainImg.style.opacity = '1';
+      }, 140);
+    }
+  };
+
+  const startAutoCycle = () => {
+    stopAutoCycle();
+    if (isHovered) return;
+    autoTimer = setInterval(() => {
+      updateShowcase(currentIndex + 1);
+    }, cycleInterval);
+  };
+
+  const stopAutoCycle = () => {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+  };
+
+  // Tab click listeners
+  tabs.forEach((tab, idx) => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      updateShowcase(idx);
+      startAutoCycle();
+    });
+  });
+
+  // Prev / Next arrow listeners
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      updateShowcase(currentIndex - 1);
+      startAutoCycle();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      updateShowcase(currentIndex + 1);
+      startAutoCycle();
+    });
+  }
+
+  // Pause on hover / touch
+  showcase.addEventListener('mouseenter', () => {
+    isHovered = true;
+    stopAutoCycle();
+  });
+
+  showcase.addEventListener('mouseleave', () => {
+    isHovered = false;
+    startAutoCycle();
+  });
+
+  showcase.addEventListener('touchstart', () => {
+    isHovered = true;
+    stopAutoCycle();
+  }, { passive: true });
+
+  showcase.addEventListener('touchend', () => {
+    isHovered = false;
+    startAutoCycle();
+  }, { passive: true });
+
+  // Start initial auto-cycle
+  startAutoCycle();
+}
+
+/* ==========================================================================
+   3. PRODUCT CATALOG FILTERING & DYNAMIC 3-IMAGE SWITCHER
    ========================================================================== */
 function initProductCatalog() {
   const filterBtns = document.querySelectorAll('.filter-btn');
@@ -146,47 +265,145 @@ function initProductCatalog() {
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
           }, 50);
+          if (card._resumeAutoCycle) card._resumeAutoCycle();
         } else {
           card.style.opacity = '0';
           card.style.transform = 'translateY(20px)';
           setTimeout(() => {
             card.style.display = 'none';
           }, 200);
+          if (card._pauseAutoCycle) card._pauseAutoCycle();
         }
       });
     });
   });
 
-  // 3-Image Thumbnail Switcher for Product Cards
-  productCards.forEach(card => {
+  // Dynamic Image Switcher for each Product Card (Staggered Auto-Cycle + Controls)
+  productCards.forEach((card, cardIdx) => {
     const mainImg = card.querySelector('.product-main-img');
     const badge = card.querySelector('.product-category-badge');
-    const thumbs = card.querySelectorAll('.product-thumb');
+    const thumbs = Array.from(card.querySelectorAll('.product-thumb'));
+    const dots = Array.from(card.querySelectorAll('.p-dot'));
+    const prevBtn = card.querySelector('.product-nav-arrow.prev');
+    const nextBtn = card.querySelector('.product-nav-arrow.next');
 
-    thumbs.forEach(thumb => {
-      const switchImage = () => {
-        const targetSrc = thumb.getAttribute('data-src');
-        const badgeText = thumb.getAttribute('data-badge');
-        const badgeIcon = thumb.getAttribute('data-icon') || 'fa-circle-check';
-        if (!targetSrc || !mainImg) return;
+    if (!mainImg || !thumbs.length) return;
 
-        thumbs.forEach(t => t.classList.remove('active'));
-        thumb.classList.add('active');
+    let currentIndex = 0;
+    let autoTimer = null;
+    let isHovered = false;
+    const cycleInterval = 3800;
+    // Stagger initial cycle start so cards don't all flip at the same instant
+    const initialDelay = 2200 + (cardIdx * 450);
 
-        // Smooth fade transition
-        mainImg.style.opacity = '0.35';
-        setTimeout(() => {
-          mainImg.src = targetSrc;
-          mainImg.style.opacity = '1';
-          if (badge && badgeText) {
-            badge.innerHTML = `<i class="fa-solid ${badgeIcon}"></i> ${badgeText}`;
-          }
-        }, 120);
-      };
+    const switchView = (index, userInitiated = false) => {
+      currentIndex = (index + thumbs.length) % thumbs.length;
+      const targetThumb = thumbs[currentIndex];
+      if (!targetThumb) return;
 
-      thumb.addEventListener('click', switchImage);
-      thumb.addEventListener('mouseenter', switchImage);
+      const targetSrc = targetThumb.getAttribute('data-src');
+      const badgeText = targetThumb.getAttribute('data-badge');
+      const badgeIcon = targetThumb.getAttribute('data-icon') || 'fa-circle-check';
+
+      thumbs.forEach((t, i) => t.classList.toggle('active', i === currentIndex));
+      dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
+
+      mainImg.style.opacity = '0.35';
+      setTimeout(() => {
+        mainImg.src = targetSrc;
+        mainImg.style.opacity = '1';
+        if (badge && badgeText) {
+          badge.innerHTML = `<i class="fa-solid ${badgeIcon}"></i> ${badgeText}`;
+        }
+      }, 120);
+
+      if (userInitiated) {
+        restartTimer();
+      }
+    };
+
+    const startTimer = (delay = cycleInterval) => {
+      stopTimer();
+      if (isHovered) return;
+      autoTimer = setTimeout(() => {
+        switchView(currentIndex + 1);
+        startTimer(cycleInterval);
+      }, delay);
+    };
+
+    const stopTimer = () => {
+      if (autoTimer) {
+        clearTimeout(autoTimer);
+        autoTimer = null;
+      }
+    };
+
+    const restartTimer = () => {
+      stopTimer();
+      startTimer(cycleInterval);
+    };
+
+    card._pauseAutoCycle = stopTimer;
+    card._resumeAutoCycle = () => {
+      if (!isHovered) startTimer(cycleInterval);
+    };
+
+    // Thumb click
+    thumbs.forEach((thumb, idx) => {
+      thumb.addEventListener('click', (e) => {
+        e.stopPropagation();
+        switchView(idx, true);
+      });
     });
+
+    // Dot click
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        switchView(idx, true);
+      });
+    });
+
+    // Prev / Next button clicks
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        switchView(currentIndex - 1, true);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        switchView(currentIndex + 1, true);
+      });
+    }
+
+    // Pause on card interaction / hover
+    card.addEventListener('mouseenter', () => {
+      isHovered = true;
+      stopTimer();
+    });
+
+    card.addEventListener('mouseleave', () => {
+      isHovered = false;
+      startTimer(cycleInterval);
+    });
+
+    card.addEventListener('touchstart', () => {
+      isHovered = true;
+      stopTimer();
+    }, { passive: true });
+
+    card.addEventListener('touchend', () => {
+      isHovered = false;
+      startTimer(cycleInterval);
+    }, { passive: true });
+
+    // Initial staggered start
+    startTimer(initialDelay);
   });
 }
 

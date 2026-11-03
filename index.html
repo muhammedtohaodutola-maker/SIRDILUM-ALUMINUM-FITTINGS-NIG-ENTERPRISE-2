@@ -197,21 +197,68 @@
         </div>
       </div>
 
-      <!-- Hero Visual Brand Display -->
+      <!-- Hero Materials Catalog Showcase (Dynamic Image Switcher) -->
       <div class="hero-visual-card">
-        <div class="hero-logo-box">
-          <img src="assets/images/logo.jpg" alt="SIRDILUM Official SAFE Logo" onerror="this.src='assets/images/logo.svg'">
-          <div class="badge-cac-pill">
-            <i class="fa-solid fa-certificate" style="color: #F59E0B;"></i>
-            CAC Federal Republic of Nigeria • CRBN 716623
+        <div class="hero-catalog-showcase" id="heroCatalogShowcase">
+          <!-- Showcase Header Badge -->
+          <div class="showcase-header">
+            <a href="#products" class="showcase-tag" title="Jump to Materials Catalog">
+              <i class="fa-solid fa-boxes-stacked"></i> Materials Catalog
+            </a>
+            <span class="showcase-status-indicator">
+              <span class="pulse-dot"></span> Dynamic Switcher
+            </span>
           </div>
-          <div class="hero-motto-emblem-text">
-            Motto: &ldquo;SAFE, STRONG..... high standard, good compromise&rdquo;
+
+          <!-- Main Dynamic Image Viewport -->
+          <div class="showcase-image-viewport">
+            <img src="assets/images/doors-finished-1.jpg" alt="Featured Architectural Aluminum Door" class="showcase-active-img" id="heroShowcaseImg">
+            <div class="showcase-overlay-caption">
+              <span class="showcase-category-label" id="heroShowcaseCategory"><i class="fa-solid fa-door-open"></i> Architectural Doors</span>
+              <h4 class="showcase-item-title" id="heroShowcaseTitle">Luxury Pivot & Bifold Entrance Systems</h4>
+              <span class="showcase-spec" id="heroShowcaseSpec">Heavy-Gauge Stile • Multi-Point Deadbolts</span>
+            </div>
+            <!-- Quick Navigation Controls -->
+            <button type="button" class="showcase-nav-btn prev" id="heroShowcasePrev" aria-label="Previous product image"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="showcase-nav-btn next" id="heroShowcaseNext" aria-label="Next product image"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
-          <div class="hero-quick-features">
-            <span><i class="fa-solid fa-check-circle" style="color:#22C55E;"></i> Safe & Sturdy</span>
-            <span><i class="fa-solid fa-check-circle" style="color:#22C55E;"></i> High Standard</span>
-            <span><i class="fa-solid fa-check-circle" style="color:#22C55E;"></i> Good Compromise</span>
+
+          <!-- Dynamic Thumbnails / Category Switcher Strip -->
+          <div class="showcase-thumb-tabs" id="heroShowcaseTabs">
+            <button type="button" class="showcase-tab active" data-src="assets/images/doors-finished-1.jpg" data-cat="Architectural Doors" data-cat-icon="fa-door-open" data-title="Luxury Pivot & Bifold Entrance Systems" data-spec="Heavy-Gauge Stile • Multi-Point Deadbolts">
+              <img src="assets/images/doors-finished-1.jpg" alt="Doors">
+              <span>Doors</span>
+            </button>
+            <button type="button" class="showcase-tab" data-src="assets/images/casement-finished-1.jpg" data-cat="Casement Windows" data-cat-icon="fa-window-maximize" data-title="Luxury 45° Miter Casement Windows" data-spec="1.2mm–1.6mm Profile • Friction Stays">
+              <img src="assets/images/casement-finished-1.jpg" alt="Casement">
+              <span>Casement</span>
+            </button>
+            <button type="button" class="showcase-tab" data-src="assets/images/roof-finished-1.jpg" data-cat="Aluminum Roofing" data-cat-icon="fa-house-chimney" data-title="Steptile & Longspan Corrugated Roofing" data-spec="0.45mm–0.70mm Tested • 10-Yr Coating">
+              <img src="assets/images/roof-finished-1.jpg" alt="Roofing">
+              <span>Roofing</span>
+            </button>
+            <button type="button" class="showcase-tab" data-src="assets/images/sliding-finished-1.jpg" data-cat="Sliding Windows" data-cat-icon="fa-sliders" data-title="Bronze Anodized Sliding Windows" data-spec="Double/Triple Track • Whisper Rollers">
+              <img src="assets/images/sliding-finished-1.jpg" alt="Sliding">
+              <span>Sliding</span>
+            </button>
+            <button type="button" class="showcase-tab" data-src="assets/images/railings-finished-1.jpg" data-cat="Balustrades & Railings" data-cat-icon="fa-shield" data-title="Frameless Tempered Glass Railings" data-spec="12mm Safety Glass • Marine 304 Spigots">
+              <img src="assets/images/railings-finished-1.jpg" alt="Railings">
+              <span>Railings</span>
+            </button>
+            <button type="button" class="showcase-tab" data-src="assets/images/interior-finished-1.jpg" data-cat="Interior & Cladding" data-cat-icon="fa-building" data-title="Modern PVDF ACP Facade Cladding" data-spec="4mm Fire Retardant Core • Partitions">
+              <img src="assets/images/interior-finished-1.jpg" alt="Cladding">
+              <span>Cladding</span>
+            </button>
+          </div>
+
+          <!-- Showcase Footer with Direct Materials Catalog CTA -->
+          <div class="showcase-footer">
+            <a href="#products" class="btn btn-primary btn-sm showcase-catalog-link">
+              <i class="fa-solid fa-boxes-stacked"></i> Explore Materials Catalog (18 Dynamic Views)
+            </a>
+            <div class="showcase-cac-pill">
+              <i class="fa-solid fa-certificate"></i> CAC: <strong>CRBN 716623</strong> &bull; <em>"SAFE, STRONG"</em>
+            </div>
           </div>
         </div>
       </div>
@@ -336,6 +383,9 @@
         <p class="section-subtitle">
           Comprehensive range of architectural aluminum profiles, roofing solutions, doors, windows, balustrades, and structural hardware.
         </p>
+        <div class="catalog-live-indicator">
+          <span class="pulse-dot"></span> Dynamic 3-View Switcher Active (Fabrication &bull; Exterior &bull; Interior)
+        </div>
       </div>
 
       <!-- Filter Controls -->
@@ -356,6 +406,13 @@
             <img src="assets/images/fab-casement-window.jpg" alt="Craftsman Fabricating Architectural Casement Window" class="product-main-img">
             <span class="product-category-badge"><i class="fa-solid fa-wrench"></i> In Fabrication</span>
             <span class="product-view-counter"><i class="fa-solid fa-images"></i> 3 Views</span>
+            <button type="button" class="product-nav-arrow prev" aria-label="Previous view"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="product-nav-arrow next" aria-label="Next view"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="product-dots">
+              <span class="p-dot active"></span>
+              <span class="p-dot"></span>
+              <span class="p-dot"></span>
+            </div>
           </div>
           <!-- 3-Image Switcher Strip -->
           <div class="product-thumbs-strip">
@@ -397,6 +454,13 @@
             <img src="assets/images/fab-sliding-window.jpg" alt="Craftsman Assembling Aluminum Sliding Window Frame" class="product-main-img">
             <span class="product-category-badge"><i class="fa-solid fa-wrench"></i> In Fabrication</span>
             <span class="product-view-counter"><i class="fa-solid fa-images"></i> 3 Views</span>
+            <button type="button" class="product-nav-arrow prev" aria-label="Previous view"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="product-nav-arrow next" aria-label="Next view"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="product-dots">
+              <span class="p-dot active"></span>
+              <span class="p-dot"></span>
+              <span class="p-dot"></span>
+            </div>
           </div>
           <!-- 3-Image Switcher Strip -->
           <div class="product-thumbs-strip">
@@ -438,6 +502,13 @@
             <img src="assets/images/fab-aluminum-doors.jpg" alt="Craftsman Fabricating Architectural Aluminum Door" class="product-main-img">
             <span class="product-category-badge"><i class="fa-solid fa-wrench"></i> In Fabrication</span>
             <span class="product-view-counter"><i class="fa-solid fa-images"></i> 3 Views</span>
+            <button type="button" class="product-nav-arrow prev" aria-label="Previous view"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="product-nav-arrow next" aria-label="Next view"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="product-dots">
+              <span class="p-dot active"></span>
+              <span class="p-dot"></span>
+              <span class="p-dot"></span>
+            </div>
           </div>
           <!-- 3-Image Switcher Strip -->
           <div class="product-thumbs-strip">
@@ -479,6 +550,13 @@
             <img src="assets/images/fab-roofing-work.jpg" alt="Two Roofers Installing Corrugated Aluminum Roofing Sheets" class="product-main-img">
             <span class="product-category-badge"><i class="fa-solid fa-person-digging"></i> On-Site Rigging</span>
             <span class="product-view-counter"><i class="fa-solid fa-images"></i> 3 Views</span>
+            <button type="button" class="product-nav-arrow prev" aria-label="Previous view"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="product-nav-arrow next" aria-label="Next view"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="product-dots">
+              <span class="p-dot active"></span>
+              <span class="p-dot"></span>
+              <span class="p-dot"></span>
+            </div>
           </div>
           <!-- 3-Image Switcher Strip -->
           <div class="product-thumbs-strip">
@@ -520,6 +598,13 @@
             <img src="assets/images/fab-glass-railings.jpg" alt="Craftsman Fabricating Tempered Glass Balustrades and Railings" class="product-main-img">
             <span class="product-category-badge"><i class="fa-solid fa-wrench"></i> In Fabrication</span>
             <span class="product-view-counter"><i class="fa-solid fa-images"></i> 3 Views</span>
+            <button type="button" class="product-nav-arrow prev" aria-label="Previous view"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="product-nav-arrow next" aria-label="Next view"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="product-dots">
+              <span class="p-dot active"></span>
+              <span class="p-dot"></span>
+              <span class="p-dot"></span>
+            </div>
           </div>
           <!-- 3-Image Switcher Strip -->
           <div class="product-thumbs-strip">
@@ -561,6 +646,13 @@
             <img src="assets/images/fab-interior-cladding.jpg" alt="Two Installers Mounting Aluminum Composite Panels Cladding" class="product-main-img">
             <span class="product-category-badge"><i class="fa-solid fa-person-digging"></i> On-Site Fitting</span>
             <span class="product-view-counter"><i class="fa-solid fa-images"></i> 3 Views</span>
+            <button type="button" class="product-nav-arrow prev" aria-label="Previous view"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="product-nav-arrow next" aria-label="Next view"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="product-dots">
+              <span class="p-dot active"></span>
+              <span class="p-dot"></span>
+              <span class="p-dot"></span>
+            </div>
           </div>
           <!-- 3-Image Switcher Strip -->
           <div class="product-thumbs-strip">
