@@ -1,0 +1,25 @@
+{
+  "name": "sirdilum-aluminum-fittings-nig-enterprise",
+  "version": "1.0.0",
+  "description": "SIRDILUM ALUMINUM FITTINGS NIG ENTERPRISE Web Platform",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^5.7.5",
+    "@supabase/supabase-js": "^2.49.1",
+    "next": "14.2.24",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "resend": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.5"
+  }
+}

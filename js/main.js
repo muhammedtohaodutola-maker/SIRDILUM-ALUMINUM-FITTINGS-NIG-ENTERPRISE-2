@@ -589,7 +589,7 @@ function initBOQEstimator() {
     '0.70': 1.70
   };
 
-  window.updateBOQCalculation = function() {
+  window.updateBOQCalculation = function () {
     const prodKey = productSelect ? productSelect.value : 'casement-window';
     const gaugeKey = gaugeSelect ? gaugeSelect.value : '0.50';
     const colorVal = colorSelect ? colorSelect.value : 'Architectural Matte Black';
@@ -748,7 +748,7 @@ function initContactForm() {
    ========================================================================== */
 function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
       const targetId = this.getAttribute('href');
       if (targetId && targetId !== '#') {
         const targetElement = document.querySelector(targetId);
