@@ -258,8 +258,9 @@ function initProductCatalog() {
       const filterValue = btn.getAttribute('data-filter');
 
       productCards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        if (filterValue === 'all' || category === filterValue) {
+        const category = card.getAttribute('data-category') || '';
+        const categories = category.split(' ');
+        if (filterValue === 'all' || categories.includes(filterValue)) {
           card.style.display = 'flex';
           setTimeout(() => {
             card.style.opacity = '1';
@@ -571,10 +572,12 @@ function initBOQEstimator() {
     'projected-window': { base: 45000, label: 'Projected Window System' },
     'sliding-door': { base: 145000, label: 'Sliding Patio Door System' },
     'bifold-door': { base: 320000, label: 'Heavy Duty Bi-Fold Door' },
+    'frameless-door': { base: 120000, label: 'Frameless Tempered Glass Door' },
     'longspan-roof': { base: 4800, label: 'Longspan Aluminum Roofing (per m)' },
     'steptile-roof': { base: 5500, label: 'Steptile Aluminum Roofing (per m)' },
     'stone-roof': { base: 6200, label: 'Stone-Coated Shingle Tile (per m)' },
     'glass-railing': { base: 58000, label: 'Tempered Glass Balustrade (per m)' },
+    'toilet-cubicle': { base: 95000, label: 'HPL Aluminum Toilet Cubicle Partition' },
     'acp-cladding': { base: 28000, label: 'ACP Aluminum Wall Cladding (per sqm)' }
   };
 
