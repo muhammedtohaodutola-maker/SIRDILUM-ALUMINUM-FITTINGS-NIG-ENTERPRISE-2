@@ -76,7 +76,11 @@ export default function Footer() {
               </li>
               <li>
                 <i className="fa-solid fa-envelope" style={{ color: 'var(--color-gold)', marginRight: '6px' }}></i>
-                <a href="mailto:odutolaekundayoidris@gmail.com" style={{ color: '#86EFAC' }}>
+                <a href="mailto:sirdilumaluminumfittingsnigent@gmail.com" style={{ color: '#86EFAC', wordBreak: 'break-all' }}>
+                  sirdilumaluminumfittingsnigent@gmail.com
+                </a>
+                {' / '}
+                <a href="mailto:odutolaekundayoidris@gmail.com" style={{ color: '#86EFAC', wordBreak: 'break-all' }}>
                   odutolaekundayoidris@gmail.com
                 </a>
               </li>

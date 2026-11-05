@@ -89,7 +89,15 @@ export default function AboutCac() {
               </div>
               <div className="cac-detail-row">
                 <span style={{ color: 'var(--color-silver-dark)' }}>Official Email:</span>
-                <strong style={{ color: '#86EFAC', wordBreak: 'break-all' }}>odutolaekundayoidris@gmail.com</strong>
+                <strong style={{ color: '#86EFAC', wordBreak: 'break-all' }}>
+                  <a href="mailto:sirdilumaluminumfittingsnigent@gmail.com" style={{ color: '#86EFAC', textDecoration: 'none' }}>
+                    sirdilumaluminumfittingsnigent@gmail.com
+                  </a>
+                  {' / '}
+                  <a href="mailto:odutolaekundayoidris@gmail.com" style={{ color: '#86EFAC', textDecoration: 'none' }}>
+                    odutolaekundayoidris@gmail.com
+                  </a>
+                </strong>
               </div>
               <div className="cac-detail-row">
                 <span style={{ color: 'var(--color-silver-dark)' }}>Primary Hotlines:</span>

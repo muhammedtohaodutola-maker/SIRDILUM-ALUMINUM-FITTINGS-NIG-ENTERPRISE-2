@@ -5,6 +5,11 @@ const BRAND_GOLD = '#D4AF37';
 const BRAND_GREEN = '#15803D';
 const BRAND_NAVY = '#0B132B';
 
+function getAdminRecipients(): string[] {
+  const raw = serverEnv.resend.adminEmail || 'sirdilumaluminumfittingsnigent@gmail.com,odutolaekundayoidris@gmail.com';
+  return raw.split(',').map((e) => e.trim()).filter(Boolean);
+}
+
 /**
  * Send branded BOQ Quote confirmation to client & notification to workshop
  */
@@ -35,6 +40,8 @@ export async function sendQuoteEmails({
   }
 
   const formattedCost = `₦${Number(estimatedCost).toLocaleString()}`;
+  const adminRecipients = getAdminRecipients();
+  const formattedAdminEmails = adminRecipients.join(' / ');
 
   const emailHtml = `
     <!DOCTYPE html>
@@ -99,17 +106,17 @@ export async function sendQuoteEmails({
           </div>
           <div class="footer">
             38, Obafemi Awolowo Road, Oke Ota-Ona, Ikorodu, Lagos State, Nigeria<br>
-            Hotlines: 08034161983 / 07015429029 &bull; Email: ${serverEnv.resend.adminEmail}
+            Hotlines: 08034161983 / 07015429029 &bull; Email: ${formattedAdminEmails}
           </div>
         </div>
       </body>
     </html>
   `;
 
-  // Send admin notification
+  // Send admin notification to both enterprise and principal owner
   await resend.emails.send({
     from: serverEnv.resend.fromEmail,
-    to: serverEnv.resend.adminEmail,
+    to: adminRecipients,
     subject: `🔔 New BOQ Quote: ${clientName || clientPhone} [${formattedCost}]`,
     html: emailHtml,
   });
@@ -151,9 +158,11 @@ export async function sendContactEmail({
     return { success: false, simulated: true };
   }
 
+  const adminRecipients = getAdminRecipients();
+
   return await resend.emails.send({
     from: serverEnv.resend.fromEmail,
-    to: serverEnv.resend.adminEmail,
+    to: adminRecipients,
     subject: `💬 New Workshop Inquiry: ${name} (${phone}) - ${projectType}`,
     html: `
       <h2>New Website Inquiry - SIRDILUM Fabrication Hub</h2>
@@ -169,3 +178,4 @@ export async function sendContactEmail({
     `,
   });
 }
+

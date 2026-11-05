@@ -2,7 +2,7 @@
  * SIRDILUM ALUMINUM FITTINGS NIG ENTERPRISE
  * Portal & Interactive Visualizer Engine
  * Motto: SAFE, STRONG..... high standard, good compromise
- * Contact: 08034161983 / 07015429029 | odutolaekundayoidris@gmail.com
+ * Contact: 08034161983 / 07015429029 | sirdilumaluminumfittingsnigent@gmail.com / odutolaekundayoidris@gmail.com
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -685,7 +685,7 @@ function initBOQEstimator() {
         `Please provide your official invoice and installation timeline.\n\n` +
         `Thank you,\n${name}`;
 
-      window.location.href = `mailto:odutolaekundayoidris@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = `mailto:sirdilumaluminumfittingsnigent@gmail.com?cc=odutolaekundayoidris@gmail.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     });
   }
 
@@ -732,13 +732,13 @@ function initContactForm() {
     const subject = `New Inquiry from ${name} via SIRDILUM Website`;
     const body = `Client Name: ${name}\nPhone: ${phone}\nEmail: ${email}\n\nMessage:\n${message}\n\nSent to SIRDILUM ALUMINUM FITTINGS NIG ENTERPRISE`;
 
-    // Open user's email client directly targeting official email
-    window.location.href = `mailto:odutolaekundayoidris@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // Open user's email client directly targeting official emails
+    window.location.href = `mailto:sirdilumaluminumfittingsnigent@gmail.com?cc=odutolaekundayoidris@gmail.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
     const formFeedback = document.getElementById('formFeedback');
     if (formFeedback) {
       formFeedback.style.display = 'block';
-      formFeedback.innerHTML = `<span style="color:#86EFAC; font-weight:700;">✓ Preparing email to odutolaekundayoidris@gmail.com. You can also reach us immediately on WhatsApp at 08034161983.</span>`;
+      formFeedback.innerHTML = `<span style="color:#86EFAC; font-weight:700;">✓ Preparing email to sirdilumaluminumfittingsnigent@gmail.com & odutolaekundayoidris@gmail.com. You can also reach us immediately on WhatsApp at 08034161983.</span>`;
     }
   });
 }

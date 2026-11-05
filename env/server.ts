@@ -22,7 +22,7 @@ export const serverEnv = {
   resend: {
     apiKey: process.env.RESEND_API_KEY || '',
     fromEmail: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-    adminEmail: process.env.ENTERPRISE_ADMIN_EMAIL || 'odutolaekundayoidris@gmail.com',
+    adminEmail: process.env.ENTERPRISE_ADMIN_EMAIL || 'sirdilumaluminumfittingsnigent@gmail.com,odutolaekundayoidris@gmail.com',
     isConfigured: Boolean(
       process.env.RESEND_API_KEY &&
       process.env.RESEND_API_KEY.startsWith('re_') &&
@@ -30,3 +30,4 @@ export const serverEnv = {
     ),
   },
 };
+
