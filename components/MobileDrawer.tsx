@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -55,6 +56,12 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 
         <div className="drawer-body">
           <ul className="drawer-nav-list" id="drawerNavList">
+            <li>
+              <Link href="/dashboard" className="drawer-nav-link" onClick={onClose}>
+                <i className="fa-solid fa-gauge" style={{ color: 'var(--color-gold)' }}></i> <span>Client Portal & Orders</span>
+                <i className="fa-solid fa-chevron-right link-chevron"></i>
+              </Link>
+            </li>
             <li>
               <a href="#home" className="drawer-nav-link" onClick={onClose}>
                 <i className="fa-solid fa-house"></i> <span>Home</span>
@@ -142,3 +149,4 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     </>
   );
 }
+

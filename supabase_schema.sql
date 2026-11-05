@@ -149,3 +149,4 @@ CREATE POLICY "Admins can view contact inquiries"
 -- 2. 'fabrication-progress'   (Public read for order stakeholders)
 -- 3. 'invoices-and-boqs'      (Private)
 -- ==============================================================================
+

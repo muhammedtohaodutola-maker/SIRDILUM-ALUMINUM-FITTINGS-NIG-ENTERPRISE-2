@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { resend, ENTERPRISE_ADMIN_EMAIL, RESEND_FROM_EMAIL } from '@/lib/resend';
+import { sendQuoteEmails } from '@/lib/mail';
+import { serverEnv } from '@/env/server';
 
 export async function POST(request: Request) {
   try {
@@ -16,6 +17,7 @@ export async function POST(request: Request) {
       quantity,
       estimatedCost,
       specs,
+      drawingUrl,
     } = body;
 
     // Validate required fields
@@ -36,53 +38,59 @@ export async function POST(request: Request) {
       finish_glazing: finishGlazing || 'Standard Clear',
       quantity: Number(quantity) || 1,
       estimated_cost_ngn: Number(estimatedCost) || 0,
-      specs: specs || {},
+      specs: specs || (drawingUrl ? { drawing_url: drawingUrl } : {}),
       status: 'pending_review',
       created_at: new Date().toISOString(),
     };
 
-    // Attempt to persist to Supabase if configured
+    // 1. Attempt to persist to Supabase Database
     let savedToDb = false;
-    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co') {
+    let dbRecordId = null;
+    if (serverEnv.supabase.isConfigured) {
       try {
-        const { error } = await supabase.from('quotes').insert([quoteRecord]);
-        if (!error) savedToDb = true;
+        const { data, error } = await supabase
+          .from('quotes')
+          .insert([quoteRecord])
+          .select('id')
+          .single();
+
+        if (!error && data) {
+          savedToDb = true;
+          dbRecordId = data.id;
+        } else if (error) {
+          console.warn('Supabase quote record insert deferred:', error.message);
+        }
       } catch (dbErr) {
-        console.warn('Supabase quote record insert deferred:', dbErr);
+        console.warn('Supabase quote insert error:', dbErr);
       }
     }
 
-    // Attempt to send email alert via Resend if configured
+    // 2. Trigger automated email notifications via Resend
     let emailSent = false;
-    if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY.startsWith('re_')) {
-      try {
-        await resend.emails.send({
-          from: RESEND_FROM_EMAIL,
-          to: ENTERPRISE_ADMIN_EMAIL,
-          subject: `New BOQ Estimate from ${clientName || clientPhone} [₦${Number(estimatedCost).toLocaleString()}]`,
-          html: `
-            <h2>SIRDILUM ALUMINUM - BOQ Quote Request</h2>
-            <p><strong>Client:</strong> ${clientName || 'N/A'} (${clientPhone})</p>
-            <p><strong>Email:</strong> ${clientEmail || 'N/A'}</p>
-            <p><strong>Project Location:</strong> ${projectLocation || 'Lagos'}</p>
-            <p><strong>Product Type:</strong> ${productType}</p>
-            <p><strong>Profile Gauge:</strong> ${profileGauge}</p>
-            <p><strong>Finish & Glazing:</strong> ${finishGlazing}</p>
-            <p><strong>Quantity / Scope:</strong> ${quantity}</p>
-            <h3>Estimated Total: ₦${Number(estimatedCost).toLocaleString()}</h3>
-            <p><em>CAC Registered: CRBN 716623</em></p>
-          `,
-        });
-        emailSent = true;
-      } catch (mailErr) {
-        console.warn('Resend email delivery deferred:', mailErr);
-      }
+    try {
+      const mailResult = await sendQuoteEmails({
+        clientName: clientName || 'Private Client',
+        clientEmail,
+        clientPhone,
+        projectLocation: projectLocation || 'Lagos',
+        productType,
+        profileGauge: profileGauge || '1.2mm',
+        finishGlazing,
+        quantity: Number(quantity) || 1,
+        estimatedCost: Number(estimatedCost) || 0,
+      });
+      emailSent = Boolean(mailResult?.success);
+    } catch (mailErr) {
+      console.warn('Resend mail delivery deferred:', mailErr);
     }
 
     return NextResponse.json({
       success: true,
       message: 'BOQ estimate processed successfully',
-      quote: quoteRecord,
+      quote: {
+        ...quoteRecord,
+        id: dbRecordId,
+      },
       savedToDb,
       emailSent,
     });

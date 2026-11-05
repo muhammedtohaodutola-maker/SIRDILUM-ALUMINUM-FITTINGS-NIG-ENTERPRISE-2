@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { resend, ENTERPRISE_ADMIN_EMAIL, RESEND_FROM_EMAIL } from '@/lib/resend';
+import { sendContactEmail } from '@/lib/mail';
+import { serverEnv } from '@/env/server';
 
 export async function POST(request: Request) {
   try {
@@ -23,9 +24,9 @@ export async function POST(request: Request) {
       created_at: new Date().toISOString(),
     };
 
-    // Save to Supabase if configured
+    // 1. Save to Supabase Database
     let savedToDb = false;
-    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co') {
+    if (serverEnv.supabase.isConfigured) {
       try {
         const { error } = await supabase.from('contacts').insert([contactRecord]);
         if (!error) savedToDb = true;
@@ -34,28 +35,19 @@ export async function POST(request: Request) {
       }
     }
 
-    // Send email via Resend if configured
+    // 2. Send email via Resend
     let emailSent = false;
-    if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY.startsWith('re_')) {
-      try {
-        await resend.emails.send({
-          from: RESEND_FROM_EMAIL,
-          to: ENTERPRISE_ADMIN_EMAIL,
-          subject: `New Workshop Inquiry from ${name} (${phone})`,
-          html: `
-            <h2>New Inquiry - SIRDILUM Web Portal</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Email:</strong> ${email || 'N/A'}</p>
-            <p><strong>Project Type:</strong> ${projectType || 'General'}</p>
-            <p><strong>Message:</strong></p>
-            <blockquote style="background:#f1f5f9;padding:12px;border-left:4px solid #15803d;">${message}</blockquote>
-          `,
-        });
-        emailSent = true;
-      } catch (mailErr) {
-        console.warn('Resend contact email deferred:', mailErr);
-      }
+    try {
+      await sendContactEmail({
+        name,
+        phone,
+        email,
+        projectType: projectType || 'General Inquiries',
+        message,
+      });
+      emailSent = true;
+    } catch (mailErr) {
+      console.warn('Resend contact email deferred:', mailErr);
     }
 
     return NextResponse.json({

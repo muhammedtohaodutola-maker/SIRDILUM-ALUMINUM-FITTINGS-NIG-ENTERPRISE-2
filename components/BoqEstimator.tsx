@@ -33,6 +33,7 @@ export default function BoqEstimator() {
   const [clientName, setClientName] = useState('');
   const [clientPhone, setClientPhone] = useState('');
   const [clientEmail, setClientEmail] = useState('');
+  const [drawingFile, setDrawingFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<string | null>(null);
 
@@ -71,6 +72,29 @@ export default function BoqEstimator() {
     setSubmissionStatus(null);
 
     try {
+      let drawingUrl = '';
+
+      // Upload architectural drawing to Supabase Storage if attached
+      if (drawingFile) {
+        try {
+          const uploadData = new FormData();
+          uploadData.append('file', drawingFile);
+          uploadData.append('bucketType', 'drawings');
+          uploadData.append('folder', 'quotes');
+
+          const uploadRes = await fetch('/api/upload', {
+            method: 'POST',
+            body: uploadData,
+          });
+          const uploadJson = await uploadRes.json();
+          if (uploadRes.ok && uploadJson.url) {
+            drawingUrl = uploadJson.url;
+          }
+        } catch (uploadErr) {
+          console.warn('File upload deferred:', uploadErr);
+        }
+      }
+
       const response = await fetch('/api/quotes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,6 +108,7 @@ export default function BoqEstimator() {
           finishGlazing: color,
           quantity,
           estimatedCost: totalCost,
+          drawingUrl,
         }),
       });
 
@@ -231,6 +256,44 @@ export default function BoqEstimator() {
                 </div>
               </div>
 
+              <div className="form-row-2col">
+                <div className="form-group">
+                  <label htmlFor="boqClientEmail" className="form-label">
+                    <i className="fa-solid fa-envelope"></i> Email (To Receive PDF Estimate via Resend):
+                  </label>
+                  <input
+                    type="email"
+                    id="boqClientEmail"
+                    className="form-control"
+                    placeholder="e.g. client@example.com"
+                    value={clientEmail}
+                    onChange={(e) => setClientEmail(e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="boqDrawingUpload" className="form-label">
+                    <i className="fa-solid fa-file-arrow-up"></i> Architectural Drawing / Plan (Optional, to Supabase Storage):
+                  </label>
+                  <input
+                    type="file"
+                    id="boqDrawingUpload"
+                    className="form-control"
+                    accept=".pdf,.dwg,.dxf,.png,.jpg,.jpeg"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setDrawingFile(e.target.files[0]);
+                      }
+                    }}
+                  />
+                  {drawingFile && (
+                    <span style={{ fontSize: '0.78rem', color: '#86efac', marginTop: '4px', display: 'block' }}>
+                      <i className="fa-solid fa-check"></i> Selected: {drawingFile.name} ({(drawingFile.size / 1024).toFixed(0)} KB)
+                    </span>
+                  )}
+                </div>
+              </div>
+
               <div className="form-group">
                 <label htmlFor="boqLocationSelect" className="form-label">
                   <i className="fa-solid fa-location-dot"></i> Site Location for Rigging / Delivery:
@@ -325,3 +388,4 @@ export default function BoqEstimator() {
     </section>
   );
 }
+

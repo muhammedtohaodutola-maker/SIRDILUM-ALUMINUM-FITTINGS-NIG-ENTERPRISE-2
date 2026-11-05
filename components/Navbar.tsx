@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface NavbarProps {
   onToggleDrawer: () => void;
@@ -104,6 +105,9 @@ export default function Navbar({ onToggleDrawer, isDrawerOpen }: NavbarProps) {
 
         {/* Desktop Nav Actions */}
         <div className="nav-actions">
+          <Link href="/dashboard" className="btn btn-outline btn-sm" title="Client & Contractor Dashboard">
+            <i className="fa-solid fa-gauge"></i> Portal
+          </Link>
           <a href="#portal" className="btn btn-primary btn-sm">
             <i className="fa-solid fa-calculator"></i> Get Quote
           </a>
@@ -138,3 +142,4 @@ export default function Navbar({ onToggleDrawer, isDrawerOpen }: NavbarProps) {
     </nav>
   );
 }
+
