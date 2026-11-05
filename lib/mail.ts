@@ -6,7 +6,7 @@ const BRAND_GREEN = '#15803D';
 const BRAND_NAVY = '#0B132B';
 
 function getAdminRecipients(): string[] {
-  const raw = serverEnv.resend.adminEmail || 'sirdilumaluminumfittingsnigent@gmail.com,odutolaekundayoidris@gmail.com';
+  const raw = serverEnv.resend.adminEmail || 'sirdilumaluminumfittingsnigent@gmail.com';
   return raw.split(',').map((e) => e.trim()).filter(Boolean);
 }
 

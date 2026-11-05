@@ -93,10 +93,6 @@ export default function AboutCac() {
                   <a href="mailto:sirdilumaluminumfittingsnigent@gmail.com" style={{ color: '#86EFAC', textDecoration: 'none' }}>
                     sirdilumaluminumfittingsnigent@gmail.com
                   </a>
-                  {' / '}
-                  <a href="mailto:odutolaekundayoidris@gmail.com" style={{ color: '#86EFAC', textDecoration: 'none' }}>
-                    odutolaekundayoidris@gmail.com
-                  </a>
                 </strong>
               </div>
               <div className="cac-detail-row">

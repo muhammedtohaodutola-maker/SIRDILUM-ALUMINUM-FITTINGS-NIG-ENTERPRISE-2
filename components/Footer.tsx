@@ -79,10 +79,6 @@ export default function Footer() {
                 <a href="mailto:sirdilumaluminumfittingsnigent@gmail.com" style={{ color: '#86EFAC', wordBreak: 'break-all' }}>
                   sirdilumaluminumfittingsnigent@gmail.com
                 </a>
-                {' / '}
-                <a href="mailto:odutolaekundayoidris@gmail.com" style={{ color: '#86EFAC', wordBreak: 'break-all' }}>
-                  odutolaekundayoidris@gmail.com
-                </a>
               </li>
               <li>
                 <i className="fa-solid fa-certificate" style={{ color: '#22C55E', marginRight: '6px' }}></i>

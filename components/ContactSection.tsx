@@ -99,13 +99,10 @@ export default function ContactSection() {
                 <i className="fa-solid fa-envelope-open-text"></i>
               </div>
               <div className="contact-card-content">
-                <h4>Official Email Addresses</h4>
-                <p style={{ wordBreak: 'break-word', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                <h4>Official Email Address</h4>
+                <p>
                   <a href="mailto:sirdilumaluminumfittingsnigent@gmail.com" style={{ color: '#86EFAC', textDecoration: 'none' }}>
                     sirdilumaluminumfittingsnigent@gmail.com
-                  </a>
-                  <a href="mailto:odutolaekundayoidris@gmail.com" style={{ color: '#86EFAC', textDecoration: 'none' }}>
-                    odutolaekundayoidris@gmail.com
                   </a>
                 </p>
                 <span className="card-subtext">Send CAD Drawings, BOQs & PDF Architectural Plans</span>

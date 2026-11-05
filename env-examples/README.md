@@ -45,5 +45,5 @@ This directory provides pre-configured templates and instructions for connecting
 2. Go to **API Keys > Create API Key** $\rightarrow$ `RESEND_API_KEY`.
 3. For immediate development and testing, set `RESEND_FROM_EMAIL=onboarding@resend.dev`.
 4. When deploying with a custom domain (e.g. `sirdilum.ng`), verify DNS records in Resend and set `RESEND_FROM_EMAIL=orders@sirdilum.ng`.
-5. `ENTERPRISE_ADMIN_EMAIL=sirdilumaluminumfittingsnigent@gmail.com,odutolaekundayoidris@gmail.com` receives all quote requests and workshop inquiries (comma-separated for multi-recipient notification).
+5. `ENTERPRISE_ADMIN_EMAIL=sirdilumaluminumfittingsnigent@gmail.com` receives all quote requests and workshop inquiries.
 
