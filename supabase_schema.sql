@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   phone TEXT,
   email TEXT UNIQUE,
   company_name TEXT,
-  role TEXT NOT NULL DEFAULT 'client' CHECK (role IN ('admin', 'fabricator', 'contractor', 'client')),
+  role TEXT NOT NULL DEFAULT 'client' CHECK (role IN ('admin', 'org:admin', 'fabricator', 'contractor', 'client', 'org:member')),
   delivery_address TEXT,
   avatar_url TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
