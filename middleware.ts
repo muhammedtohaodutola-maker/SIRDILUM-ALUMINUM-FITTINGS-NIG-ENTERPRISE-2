@@ -1,10 +1,8 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { clerkMiddleware } from '@clerk/nextjs/server';
 
-export default function middleware(request: NextRequest) {
-  // Allow all traffic through cleanly without crashing on missing Edge environment keys
-  return NextResponse.next();
-}
+// Standard Clerk middleware: attaches session and auth context to all matching routes
+// Allows role-based dashboard to dynamically adapt for signed-in users and demo mode
+export default clerkMiddleware();
 
 export const config = {
   matcher: [
