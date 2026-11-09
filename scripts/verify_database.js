@@ -5,7 +5,16 @@ const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1Ni
 
 const hostname = SUPABASE_URL.replace('https://', '').replace('/', '');
 
-const tablesToCheck = ['profiles', 'products', 'quotes', 'orders', 'order_milestones', 'contacts'];
+const tablesToCheck = [
+  'profiles',
+  'products',
+  'quotes',
+  'orders',
+  'order_milestones',
+  'contacts',
+  'building_material_receipts',
+  'ready_made_receipts'
+];
 
 console.log('🔍 Checking SIRDILUM Supabase Database Tables at:', hostname);
 console.log('------------------------------------------------------------');
@@ -68,3 +77,4 @@ function report() {
     console.log(`👉 https://supabase.com/dashboard/project/drrtflkfyolofejuoofx/sql/new`);
   }
 }
+

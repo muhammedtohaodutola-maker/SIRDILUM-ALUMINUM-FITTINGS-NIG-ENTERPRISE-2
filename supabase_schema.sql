@@ -3,6 +3,8 @@
 -- Comprehensive PostgreSQL Database Schema & Row Level Security (RLS)
 -- Corporate Affairs Commission (CAC) Registered Enterprise: CRBN 716623
 -- Official Motto: SAFE, STRONG..... high standard, good compromise
+-- Primary Hotlines: 08034161983 / 07015429029
+-- Official Email: sirdilumaluminumfittingsnigent@gmail.com
 -- ==============================================================================
 
 -- Enable UUID extension
@@ -200,7 +202,92 @@ CREATE POLICY "Anyone can view contacts"
   USING (true);
 
 -- ------------------------------------------------------------------------------
--- 7. AUTOMATIC TIMESTAMP TRIGGER
+-- 7. CUSTOMER PURCHASE: BUILDING MATERIALS RECEIPT TABLE
+-- (Raw aluminum extrusions, roofing coils, glass sheets, hardware, sealants)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.building_material_receipts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  receipt_number TEXT UNIQUE NOT NULL, -- e.g. REC-MAT-2026-0001
+  customer_id TEXT REFERENCES public.profiles(id) ON DELETE SET NULL,
+  customer_name TEXT NOT NULL,
+  customer_phone TEXT NOT NULL,
+  customer_email TEXT,
+  delivery_site_address TEXT,
+  material_category TEXT NOT NULL, -- 'Aluminum Extrusions', 'Roofing Coils', 'Glass Sheets', 'Hardware & Accessories', 'Sealants & Gaskets'
+  items JSONB NOT NULL DEFAULT '[]'::jsonb, -- Array of [{ description, gauge_spec, quantity, unit, unit_price_ngn, total_price_ngn }]
+  subtotal_amount_ngn NUMERIC NOT NULL,
+  discount_amount_ngn NUMERIC DEFAULT 0,
+  delivery_fee_ngn NUMERIC DEFAULT 0,
+  total_amount_paid_ngn NUMERIC NOT NULL,
+  payment_method TEXT NOT NULL DEFAULT 'bank_transfer' CHECK (payment_method IN ('bank_transfer', 'pos', 'cash', 'card', 'online')),
+  payment_status TEXT NOT NULL DEFAULT 'paid' CHECK (payment_status IN ('paid', 'partially_paid', 'pending', 'refunded')),
+  issued_by TEXT DEFAULT 'SIRDILUM Sales & Warehouse Desk',
+  cac_registration TEXT DEFAULT 'CRBN 716623',
+  official_motto TEXT DEFAULT 'SAFE, STRONG..... high standard, good compromise',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS for Building Material Receipts
+ALTER TABLE public.building_material_receipts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anyone can view building material receipts" ON public.building_material_receipts;
+CREATE POLICY "Anyone can view building material receipts"
+  ON public.building_material_receipts FOR SELECT
+  USING (true);
+
+DROP POLICY IF EXISTS "Service role manage building material receipts" ON public.building_material_receipts;
+CREATE POLICY "Service role manage building material receipts"
+  ON public.building_material_receipts FOR ALL
+  USING (true);
+
+-- ------------------------------------------------------------------------------
+-- 8. CUSTOMER PURCHASE: READY-MADE MATERIALS RECEIPT TABLE
+-- (Pre-fabricated casement windows, sliding doors, toilet cubicles, frameless glass doors, railings)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.ready_made_receipts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  receipt_number TEXT UNIQUE NOT NULL, -- e.g. REC-RDM-2026-0001
+  customer_id TEXT REFERENCES public.profiles(id) ON DELETE SET NULL,
+  customer_name TEXT NOT NULL,
+  customer_phone TEXT NOT NULL,
+  customer_email TEXT,
+  delivery_address TEXT,
+  ready_made_category TEXT NOT NULL, -- 'Casement Windows', 'Sliding Doors', 'Frameless Glass Doors', 'Toilet Cubicles', 'Glass Railings'
+  items JSONB NOT NULL DEFAULT '[]'::jsonb, -- Array of [{ product_name, dimensions, finish, glazing, quantity, unit_price_ngn, total_price_ngn }]
+  subtotal_amount_ngn NUMERIC NOT NULL,
+  discount_amount_ngn NUMERIC DEFAULT 0,
+  installation_included BOOLEAN DEFAULT false,
+  installation_fee_ngn NUMERIC DEFAULT 0,
+  delivery_fee_ngn NUMERIC DEFAULT 0,
+  total_amount_paid_ngn NUMERIC NOT NULL,
+  warranty_period TEXT DEFAULT '12 Months Comprehensive Fabrication Warranty',
+  payment_method TEXT NOT NULL DEFAULT 'bank_transfer' CHECK (payment_method IN ('bank_transfer', 'pos', 'cash', 'card', 'online')),
+  payment_status TEXT NOT NULL DEFAULT 'paid' CHECK (payment_status IN ('paid', 'partially_paid', 'pending', 'refunded')),
+  issued_by TEXT DEFAULT 'SIRDILUM Finished Goods Showroom',
+  cac_registration TEXT DEFAULT 'CRBN 716623',
+  official_motto TEXT DEFAULT 'SAFE, STRONG..... high standard, good compromise',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS for Ready-Made Receipts
+ALTER TABLE public.ready_made_receipts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anyone can view ready made receipts" ON public.ready_made_receipts;
+CREATE POLICY "Anyone can view ready made receipts"
+  ON public.ready_made_receipts FOR SELECT
+  USING (true);
+
+DROP POLICY IF EXISTS "Service role manage ready made receipts" ON public.ready_made_receipts;
+CREATE POLICY "Service role manage ready made receipts"
+  ON public.ready_made_receipts FOR ALL
+  USING (true);
+
+-- ------------------------------------------------------------------------------
+-- 9. AUTOMATIC TIMESTAMP TRIGGER
 -- ------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.handle_updated_at()
 RETURNS TRIGGER AS $$
@@ -230,8 +317,18 @@ CREATE TRIGGER set_orders_updated_at
   BEFORE UPDATE ON public.orders
   FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
+DROP TRIGGER IF EXISTS set_building_material_receipts_updated_at ON public.building_material_receipts;
+CREATE TRIGGER set_building_material_receipts_updated_at
+  BEFORE UPDATE ON public.building_material_receipts
+  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS set_ready_made_receipts_updated_at ON public.ready_made_receipts;
+CREATE TRIGGER set_ready_made_receipts_updated_at
+  BEFORE UPDATE ON public.ready_made_receipts
+  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
 -- ------------------------------------------------------------------------------
--- 8. INITIAL SEED DATA (SIRDILUM Architectural Products Catalog)
+-- 10. INITIAL SEED DATA: ARCHITECTURAL PRODUCTS CATALOG
 -- ------------------------------------------------------------------------------
 INSERT INTO public.products (slug, title, category, description, base_price_ngn, unit_type, image_url, badge, features)
 VALUES
@@ -326,7 +423,7 @@ VALUES
 ON CONFLICT (slug) DO NOTHING;
 
 -- ------------------------------------------------------------------------------
--- 9. INITIAL SAMPLE SEED ORDER (For Dashboard Demonstration)
+-- 11. INITIAL SEED DATA: SAMPLE ORDERS & MILESTONES
 -- ------------------------------------------------------------------------------
 INSERT INTO public.orders (
   tracking_code,
@@ -350,7 +447,6 @@ VALUES (
 )
 ON CONFLICT (tracking_code) DO NOTHING;
 
--- Seed Milestones for the sample order
 INSERT INTO public.order_milestones (order_id, stage, title, description, photo_url)
 SELECT
   id,
@@ -363,3 +459,144 @@ WHERE tracking_code = 'SIR-2026-0842'
 AND NOT EXISTS (
   SELECT 1 FROM public.order_milestones WHERE order_id = public.orders.id
 );
+
+-- ------------------------------------------------------------------------------
+-- 12. INITIAL SEED DATA: CUSTOMER PURCHASE RECEIPTS
+-- ------------------------------------------------------------------------------
+
+-- Seed 1: Building Materials Purchase Receipt
+INSERT INTO public.building_material_receipts (
+  receipt_number,
+  customer_name,
+  customer_phone,
+  customer_email,
+  delivery_site_address,
+  material_category,
+  items,
+  subtotal_amount_ngn,
+  discount_amount_ngn,
+  delivery_fee_ngn,
+  total_amount_paid_ngn,
+  payment_method,
+  payment_status,
+  notes
+)
+VALUES (
+  'REC-MAT-2026-0142',
+  'Chief Adeleke Ogunlana (Ogunlana Construction Ltd)',
+  '08023456789',
+  'ogunlana.builders@gmail.com',
+  'Site 4B, Greenland Estate, Ibeju-Lekki, Lagos State',
+  'Aluminum Extrusions & Glazing Accessories',
+  '[
+    {
+      "description": "6063-T5 Architectural Aluminum Profiles (1.5mm Heavy Duty, Anodized Silver, 5.8m Lengths)",
+      "gauge_spec": "1.5mm Gauge",
+      "quantity": 35,
+      "unit": "lengths",
+      "unit_price_ngn": 24000,
+      "total_price_ngn": 840000
+    },
+    {
+      "description": "EPDM Double-Lip Glazing Rubber Gaskets (100m Roll)",
+      "gauge_spec": "High-Grade EPDM",
+      "quantity": 4,
+      "unit": "rolls",
+      "unit_price_ngn": 18500,
+      "total_price_ngn": 74000
+    },
+    {
+      "description": "Stainless Steel Heavy-Duty Dual-Wheel Sliding Rollers",
+      "gauge_spec": "Marine Grade 304",
+      "quantity": 50,
+      "unit": "pairs",
+      "unit_price_ngn": 3800,
+      "total_price_ngn": 190000
+    },
+    {
+      "description": "Structural Neutral Cure Silicone Sealant (Clear 300ml Cartridges)",
+      "gauge_spec": "Weather-Tight Neutral",
+      "quantity": 24,
+      "unit": "tubes",
+      "unit_price_ngn": 4500,
+      "total_price_ngn": 108000
+    }
+  ]'::jsonb,
+  1212000,
+  0,
+  35000,
+  1247000,
+  'bank_transfer',
+  'paid',
+  'Materials inspected and dispatched via flatbed truck to Ibeju-Lekki. Quality guaranteed under CRBN 716623.'
+)
+ON CONFLICT (receipt_number) DO NOTHING;
+
+-- Seed 2: Ready-Made Materials Purchase Receipt
+INSERT INTO public.ready_made_receipts (
+  receipt_number,
+  customer_name,
+  customer_phone,
+  customer_email,
+  delivery_address,
+  ready_made_category,
+  items,
+  subtotal_amount_ngn,
+  discount_amount_ngn,
+  installation_included,
+  installation_fee_ngn,
+  delivery_fee_ngn,
+  total_amount_paid_ngn,
+  warranty_period,
+  payment_method,
+  payment_status,
+  notes
+)
+VALUES (
+  'REC-RDM-2026-0205',
+  'Engr. Babatunde Fashola (Magodo GRA Villa Project)',
+  '08039876543',
+  'babatunde.fashola.engr@yahoo.com',
+  'Plot 12, Phase 2, Magodo GRA, Shangisha, Lagos State',
+  'Frameless Glass Doors, Casement Windows & Toilet Cubicles',
+  '[
+    {
+      "product_name": "12mm Clear Tempered Frameless Glass Double-Door Set (2100mm x 1800mm)",
+      "dimensions": "2100mm H x 1800mm W",
+      "finish": "Brushed Stainless 304",
+      "glazing": "12mm Toughened Safety Glass",
+      "quantity": 2,
+      "unit_price_ngn": 380000,
+      "total_price_ngn": 760000
+    },
+    {
+      "product_name": "Architectural Projected Casement Window Units (1200mm x 1200mm)",
+      "dimensions": "1200mm x 1200mm",
+      "finish": "Matte Architectural Black Powder-Coat",
+      "glazing": "6mm Tinted Reflective Glass",
+      "quantity": 6,
+      "unit_price_ngn": 78000,
+      "total_price_ngn": 468000
+    },
+    {
+      "product_name": "Compact Laminate Solid Phenolic Toilet Cubicle Sets with Nylon Locks",
+      "dimensions": "1950mm H x 900mm W x 1200mm D",
+      "finish": "Anodized Silver Structural Trim",
+      "glazing": "Impervious Solid Phenolic Core",
+      "quantity": 3,
+      "unit_price_ngn": 120000,
+      "total_price_ngn": 360000
+    }
+  ]'::jsonb,
+  1588000,
+  0,
+  true,
+  120000,
+  25000,
+  1733000,
+  '12 Months Comprehensive Fabrication & Alignment Warranty',
+  'bank_transfer',
+  'paid',
+  'Complete ready-made units packaged with protective film. Onsite installation team assigned from Ikorodu central workshop.'
+)
+ON CONFLICT (receipt_number) DO NOTHING;
