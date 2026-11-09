@@ -2,7 +2,11 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+const FALLBACK_CLERK_PUB_KEY =
+  'pk_test_ZGFybGluZy13aWxkY2F0LTE2MzEuY2xlcmsuYWNjb3VudHMuZGV2JA';
+
+const publishableKey =
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || FALLBACK_CLERK_PUB_KEY;
 const isClerkConfigured = Boolean(
   publishableKey &&
   publishableKey.startsWith('pk_') &&
