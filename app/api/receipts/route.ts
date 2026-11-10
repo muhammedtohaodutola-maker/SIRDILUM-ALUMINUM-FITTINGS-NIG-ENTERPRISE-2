@@ -4,7 +4,7 @@ import { serverEnv } from '@/env/server';
 
 /**
  * GET /api/receipts
- * Fetch receipts by type: 'building_material' | 'ready_made' | 'all'
+ * Fetch receipts by type: 'building_material' | 'ready_made' | 'custom_fabrication' | 'all'
  */
 export async function GET(request: Request) {
   try {
@@ -36,26 +36,107 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, receipts: data || [] });
     }
 
-    // If 'all', query both and merge
-    const [matRes, rdmRes] = await Promise.all([
+    if (type === 'custom_fabrication') {
+      const { data, error } = await client
+        .from('custom_fabrication_receipts')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return NextResponse.json({ success: true, receipts: data || [] });
+    }
+
+    // If 'all', query all 3 receipt tables and merge
+    const [matRes, rdmRes, fabRes] = await Promise.all([
       client.from('building_material_receipts').select('*').order('created_at', { ascending: false }).limit(limit),
       client.from('ready_made_receipts').select('*').order('created_at', { ascending: false }).limit(limit),
+      client.from('custom_fabrication_receipts').select('*').order('created_at', { ascending: false }).limit(limit),
     ]);
 
     const buildingMaterial = matRes.data ? matRes.data.map(r => ({ ...r, receipt_type: 'building_material' })) : [];
     const readyMade = rdmRes.data ? rdmRes.data.map(r => ({ ...r, receipt_type: 'ready_made' })) : [];
+    const customFabrication = fabRes.data ? fabRes.data.map(r => ({ ...r, receipt_type: 'custom_fabrication' })) : [];
 
-    const allReceipts = [...buildingMaterial, ...readyMade].sort(
+    const allReceipts = [...customFabrication, ...buildingMaterial, ...readyMade].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
     return NextResponse.json({ success: true, receipts: allReceipts });
   } catch (error: any) {
-    console.warn('Error fetching receipts from Supabase, serving fallback demo data:', error.message);
+    console.warn('Error fetching receipts from Supabase, serving comprehensive fallback demo data:', error.message);
     return NextResponse.json({
       success: true,
       simulated: true,
       receipts: [
+        {
+          id: 'demo-fab-1',
+          receipt_number: 'REC-FAB-2026-0312',
+          receipt_type: 'custom_fabrication',
+          project_title: 'Lekki Phase 1 Twin Duplex - Casement Windows & Glass Balustrades',
+          tracking_code: 'SIR-2026-0842',
+          customer_name: 'Dr. Femi Adeleke (Adeleke Luxury Residences)',
+          customer_phone: '08034567812',
+          customer_email: 'femi.adeleke.md@gmail.com',
+          delivery_site_address: 'Plot 14, Admiralty Way, Lekki Phase 1, Lagos State',
+          architect_engineer_name: 'Arc. Olumide Adeleke (Adeleke Design & Build Studio)',
+          assigned_lead_fabricator: 'Odutola Ekundayo Idris (Lead Master Fabricator)',
+          total_contract_sum_ngn: 3450000,
+          payment_stage: 'deposit_70',
+          deposit_paid_ngn: 2415000,
+          balance_due_ngn: 1035000,
+          amount_paid_this_receipt_ngn: 2415000,
+          total_amount_paid_ngn: 2415000,
+          installation_included: true,
+          estimated_handover_date: 'Nov 18, 2026',
+          warranty_period: '5-Year Structural Integrity & Anti-Rattle Guarantee',
+          payment_method: 'bank_transfer',
+          payment_status: 'paid',
+          created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
+          notes: 'Official 70% Mobilization Deposit verified for raw profile cutting, CNC mitering, and glass tempering. Balance of ₦1,035,000 due upon final site handover in Lekki Phase 1.',
+          items: [
+            {
+              item_tag: 'Schedule W1 (Master & Penthouse)',
+              description: 'Architectural Projected Casement Window Units with Multi-Point Locking',
+              dimensions: '1500mm W x 1800mm H',
+              profile_gauge: '1.6mm 6063-T5 Heavy-Duty Alloy',
+              glass_spec: '6mm Reflective Bronze Tinted Float Glass',
+              quantity: 12,
+              unit_price_ngn: 95000,
+              total_price_ngn: 1140000,
+            },
+            {
+              item_tag: 'Schedule W2 (Living & Dining Halls)',
+              description: 'Luxury 45-Degree Miter Projected Window Units with Euro-Groove Hardware',
+              dimensions: '1200mm W x 1200mm H',
+              profile_gauge: '1.5mm Gauge Anodized Silver',
+              glass_spec: '6mm Bronze Tempered Glass',
+              quantity: 10,
+              unit_price_ngn: 78000,
+              total_price_ngn: 780000,
+            },
+            {
+              item_tag: 'Schedule D1 (Patio & Terrace)',
+              description: 'Heavy-Duty Sliding Patio Glass Doors with Whispering Rollers & Anti-Lift Stops',
+              dimensions: '2400mm W x 2100mm H (3-Track System)',
+              profile_gauge: '1.8mm Reinforced Stile',
+              glass_spec: '8mm Clear Toughened Safety Glass',
+              quantity: 2,
+              unit_price_ngn: 245000,
+              total_price_ngn: 490000,
+            },
+            {
+              item_tag: 'Schedule B1 (Balcony Railing)',
+              description: 'Frameless Tempered Glass Balustrade with Marine-Grade 304 Stainless Steel Spigots',
+              dimensions: '14 Linear Meters (1000mm Height)',
+              profile_gauge: 'Heavy Solid Base Spigots & Handrail',
+              glass_spec: '12mm Toughened Laminated Safety Glass',
+              quantity: 14,
+              unit_price_ngn: 74285,
+              total_price_ngn: 1040000,
+            },
+          ],
+        },
         {
           id: 'demo-mat-1',
           receipt_number: 'REC-MAT-2026-0142',
@@ -72,6 +153,7 @@ export async function GET(request: Request) {
           payment_method: 'bank_transfer',
           payment_status: 'paid',
           created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+          notes: 'Materials inspected and dispatched via flatbed truck to Ibeju-Lekki. Quality guaranteed under CRBN 716623.',
           items: [
             {
               description: '6063-T5 Architectural Aluminum Profiles (1.5mm Gauge, Anodized Silver, 5.8m)',
@@ -126,6 +208,7 @@ export async function GET(request: Request) {
           payment_method: 'bank_transfer',
           payment_status: 'paid',
           created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
+          notes: 'Complete ready-made units packaged with protective film. Onsite installation team assigned from Ikorodu central workshop.',
           items: [
             {
               product_name: '12mm Clear Tempered Frameless Glass Double-Door Set (2100mm x 1800mm)',
@@ -163,7 +246,7 @@ export async function GET(request: Request) {
 
 /**
  * POST /api/receipts
- * Create a new building material or ready-made receipt
+ * Create a new building material, ready-made, or custom fabrication receipt
  */
 export async function POST(request: Request) {
   try {
@@ -171,6 +254,70 @@ export async function POST(request: Request) {
     const { receiptType, ...payload } = body;
 
     const client = getServiceSupabase();
+
+    if (receiptType === 'custom_fabrication') {
+      const totalContractSum = Number(payload.totalContractSumNgn) || Number(payload.subtotalAmountNgn) || 0;
+      const paymentStage = payload.paymentStage || 'deposit_70';
+      
+      let depositPaid = Number(payload.depositPaidNgn);
+      let balanceDue = Number(payload.balanceDueNgn);
+      let amountPaidThisReceipt = Number(payload.amountPaidThisReceiptNgn);
+
+      if (paymentStage === 'deposit_70') {
+        depositPaid = Math.round(totalContractSum * 0.7);
+        balanceDue = totalContractSum - depositPaid;
+        amountPaidThisReceipt = depositPaid;
+      } else if (paymentStage === 'balance_30') {
+        depositPaid = Math.round(totalContractSum * 0.7);
+        balanceDue = 0;
+        amountPaidThisReceipt = totalContractSum - depositPaid;
+      } else {
+        // full_100
+        depositPaid = totalContractSum;
+        balanceDue = 0;
+        amountPaidThisReceipt = totalContractSum;
+      }
+
+      const record = {
+        receipt_number: payload.receiptNumber || `REC-FAB-${Date.now().toString().slice(-6)}`,
+        project_title: payload.projectTitle || 'Architectural Aluminum Fabrication Project',
+        tracking_code: payload.trackingCode || null,
+        customer_id: payload.customerId || null,
+        customer_name: payload.customerName,
+        customer_phone: payload.customerPhone,
+        customer_email: payload.customerEmail || null,
+        delivery_site_address: payload.deliverySiteAddress || 'Project Site Address (Lagos State)',
+        architect_engineer_name: payload.architectEngineerName || null,
+        assigned_lead_fabricator: payload.assignedLeadFabricator || 'Odutola Ekundayo Idris (Lead Master Fabricator)',
+        items: payload.items || [],
+        total_contract_sum_ngn: totalContractSum,
+        payment_stage: paymentStage,
+        deposit_paid_ngn: depositPaid,
+        balance_due_ngn: balanceDue,
+        amount_paid_this_receipt_ngn: amountPaidThisReceipt,
+        total_amount_paid_ngn: amountPaidThisReceipt,
+        installation_included: Boolean(payload.installationIncluded !== false),
+        estimated_handover_date: payload.estimatedHandoverDate || null,
+        warranty_period: payload.warrantyPeriod || '5-Year Structural Integrity & Anti-Rattle Guarantee',
+        payment_method: payload.paymentMethod || 'bank_transfer',
+        payment_status: payload.paymentStatus || 'paid',
+        issued_by: 'SIRDILUM Workshop & Engineering Desk',
+        notes: payload.notes || 'Custom architectural fabrication commissioned under CAC Registered Enterprise CRBN 716623.',
+      };
+
+      const { data, error } = await client
+        .from('custom_fabrication_receipts')
+        .insert([record])
+        .select()
+        .single();
+
+      if (error) {
+        console.warn('Supabase insert error (table may not yet be initialized in Dashboard):', error.message);
+        return NextResponse.json({ success: true, simulated: true, receipt: record });
+      }
+
+      return NextResponse.json({ success: true, receipt: data });
+    }
 
     if (receiptType === 'building_material') {
       const record = {
@@ -243,10 +390,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, receipt: data });
     }
 
-    return NextResponse.json({ error: 'Invalid receiptType specified' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid receiptType specified. Must be custom_fabrication, building_material, or ready_made.' }, { status: 400 });
   } catch (error: any) {
     console.error('Error creating receipt:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-

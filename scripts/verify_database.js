@@ -13,7 +13,8 @@ const tablesToCheck = [
   'order_milestones',
   'contacts',
   'building_material_receipts',
-  'ready_made_receipts'
+  'ready_made_receipts',
+  'custom_fabrication_receipts'
 ];
 
 console.log('🔍 Checking SIRDILUM Supabase Database Tables at:', hostname);

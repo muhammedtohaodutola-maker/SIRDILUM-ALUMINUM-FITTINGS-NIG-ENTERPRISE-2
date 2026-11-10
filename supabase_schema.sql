@@ -287,7 +287,57 @@ CREATE POLICY "Service role manage ready made receipts"
   USING (true);
 
 -- ------------------------------------------------------------------------------
--- 9. AUTOMATIC TIMESTAMP TRIGGER
+-- 9. CUSTOMER PURCHASE: CUSTOM ALUMINUM FABRICATION & INSTALLATION RECEIPTS TABLE
+-- (Custom windows, doors, balustrades, cladding to site architectural drawings)
+-- Staged payment: 70% Mobilization Deposit vs 30% Completion / Handover Balance
+-- Includes Site Delivery Address, Architect/Supervising Engineer, Lead Master Fabricator
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.custom_fabrication_receipts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  receipt_number TEXT UNIQUE NOT NULL, -- e.g. REC-FAB-2026-0001
+  project_title TEXT NOT NULL,
+  tracking_code TEXT REFERENCES public.orders(tracking_code) ON DELETE SET NULL,
+  customer_id TEXT REFERENCES public.profiles(id) ON DELETE SET NULL,
+  customer_name TEXT NOT NULL,
+  customer_phone TEXT NOT NULL,
+  customer_email TEXT,
+  delivery_site_address TEXT NOT NULL,
+  architect_engineer_name TEXT,
+  assigned_lead_fabricator TEXT DEFAULT 'Odutola Ekundayo Idris (Lead Master Fabricator)',
+  items JSONB NOT NULL DEFAULT '[]'::jsonb, -- Array of [{ item_tag, description, dimensions, profile_gauge, glass_spec, quantity, unit_price_ngn, total_price_ngn }]
+  total_contract_sum_ngn NUMERIC NOT NULL,
+  payment_stage TEXT NOT NULL DEFAULT 'deposit_70' CHECK (payment_stage IN ('deposit_70', 'balance_30', 'full_100')),
+  deposit_paid_ngn NUMERIC NOT NULL, -- 70% Mobilization Deposit
+  balance_due_ngn NUMERIC NOT NULL,  -- 30% Handover Balance
+  amount_paid_this_receipt_ngn NUMERIC NOT NULL,
+  installation_included BOOLEAN DEFAULT true,
+  estimated_handover_date DATE,
+  warranty_period TEXT DEFAULT '5-Year Structural Integrity & Anti-Rattle Guarantee',
+  payment_method TEXT NOT NULL DEFAULT 'bank_transfer' CHECK (payment_method IN ('bank_transfer', 'pos', 'cash', 'card', 'online')),
+  payment_status TEXT NOT NULL DEFAULT 'paid' CHECK (payment_status IN ('paid', 'partially_paid', 'pending', 'refunded')),
+  issued_by TEXT DEFAULT 'SIRDILUM Workshop & Engineering Desk',
+  cac_registration TEXT DEFAULT 'CRBN 716623',
+  official_motto TEXT DEFAULT 'SAFE, STRONG..... high standard, good compromise',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS for Custom Fabrication Receipts
+ALTER TABLE public.custom_fabrication_receipts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anyone can view custom fabrication receipts" ON public.custom_fabrication_receipts;
+CREATE POLICY "Anyone can view custom fabrication receipts"
+  ON public.custom_fabrication_receipts FOR SELECT
+  USING (true);
+
+DROP POLICY IF EXISTS "Service role manage custom fabrication receipts" ON public.custom_fabrication_receipts;
+CREATE POLICY "Service role manage custom fabrication receipts"
+  ON public.custom_fabrication_receipts FOR ALL
+  USING (true);
+
+-- ------------------------------------------------------------------------------
+-- 10. AUTOMATIC TIMESTAMP TRIGGER
 -- ------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.handle_updated_at()
 RETURNS TRIGGER AS $$
@@ -325,6 +375,11 @@ CREATE TRIGGER set_building_material_receipts_updated_at
 DROP TRIGGER IF EXISTS set_ready_made_receipts_updated_at ON public.ready_made_receipts;
 CREATE TRIGGER set_ready_made_receipts_updated_at
   BEFORE UPDATE ON public.ready_made_receipts
+  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS set_custom_fabrication_receipts_updated_at ON public.custom_fabrication_receipts;
+CREATE TRIGGER set_custom_fabrication_receipts_updated_at
+  BEFORE UPDATE ON public.custom_fabrication_receipts
   FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
 -- ------------------------------------------------------------------------------
@@ -598,5 +653,95 @@ VALUES (
   'bank_transfer',
   'paid',
   'Complete ready-made units packaged with protective film. Onsite installation team assigned from Ikorodu central workshop.'
+)
+ON CONFLICT (receipt_number) DO NOTHING;
+
+-- Seed 3: Client Custom Fabrication & Installation Receipt (70% Mobilization Deposit)
+INSERT INTO public.custom_fabrication_receipts (
+  receipt_number,
+  project_title,
+  tracking_code,
+  customer_name,
+  customer_phone,
+  customer_email,
+  delivery_site_address,
+  architect_engineer_name,
+  assigned_lead_fabricator,
+  items,
+  total_contract_sum_ngn,
+  payment_stage,
+  deposit_paid_ngn,
+  balance_due_ngn,
+  amount_paid_this_receipt_ngn,
+  installation_included,
+  estimated_handover_date,
+  warranty_period,
+  payment_method,
+  payment_status,
+  notes
+)
+VALUES (
+  'REC-FAB-2026-0312',
+  'Lekki Phase 1 Twin Duplex - Casement Windows & Glass Balustrades',
+  'SIR-2026-0842',
+  'Dr. Femi Adeleke (Adeleke Luxury Residences)',
+  '08034567812',
+  'femi.adeleke.md@gmail.com',
+  'Plot 14, Admiralty Way, Lekki Phase 1, Lagos State',
+  'Arc. Olumide Adeleke (Adeleke Design & Build Studio)',
+  'Odutola Ekundayo Idris (Lead Master Fabricator)',
+  '[
+    {
+      "item_tag": "Schedule W1 (Master & Penthouse)",
+      "description": "Architectural Projected Casement Window Units with Multi-Point Locking",
+      "dimensions": "1500mm W x 1800mm H",
+      "profile_gauge": "1.6mm 6063-T5 Heavy-Duty Alloy",
+      "glass_spec": "6mm Reflective Bronze Tinted Float Glass",
+      "quantity": 12,
+      "unit_price_ngn": 95000,
+      "total_price_ngn": 1140000
+    },
+    {
+      "item_tag": "Schedule W2 (Living & Dining Halls)",
+      "description": "Luxury 45-Degree Miter Projected Window Units with Euro-Groove Hardware",
+      "dimensions": "1200mm W x 1200mm H",
+      "profile_gauge": "1.5mm Gauge Anodized Silver",
+      "glass_spec": "6mm Bronze Tempered Glass",
+      "quantity": 10,
+      "unit_price_ngn": 78000,
+      "total_price_ngn": 780000
+    },
+    {
+      "item_tag": "Schedule D1 (Patio & Terrace)",
+      "description": "Heavy-Duty Sliding Patio Glass Doors with Whispering Rollers & Anti-Lift Stops",
+      "dimensions": "2400mm W x 2100mm H (3-Track System)",
+      "profile_gauge": "1.8mm Reinforced Stile",
+      "glass_spec": "8mm Clear Toughened Safety Glass",
+      "quantity": 2,
+      "unit_price_ngn": 245000,
+      "total_price_ngn": 490000
+    },
+    {
+      "item_tag": "Schedule B1 (Balcony Railing)",
+      "description": "Frameless Tempered Glass Balustrade with Marine-Grade 304 Stainless Steel Spigots",
+      "dimensions": "14 Linear Meters (1000mm Height)",
+      "profile_gauge": "Heavy Solid Base Spigots & Handrail",
+      "glass_spec": "12mm Toughened Laminated Safety Glass",
+      "quantity": 14,
+      "unit_price_ngn": 74285,
+      "total_price_ngn": 1040000
+    }
+  ]'::jsonb,
+  3450000,
+  'deposit_70',
+  2415000, -- 70% Mobilization Deposit Paid
+  1035000, -- 30% Balance Due Upon Handover
+  2415000, -- Paid this receipt
+  true,
+  CURRENT_DATE + INTERVAL '12 days',
+  '5-Year Comprehensive Structural Integrity & Anti-Rattle Guarantee',
+  'bank_transfer',
+  'paid',
+  'Official 70% Mobilization Deposit verified for raw profile cutting, CNC mitering, and glass tempering. Balance of ₦1,035,000 due upon final site handover in Lekki Phase 1.'
 )
 ON CONFLICT (receipt_number) DO NOTHING;

@@ -126,6 +126,72 @@ export default function ContractorView({
     ],
   };
 
+  const sampleFabricationReceipt: ReceiptData = {
+    receipt_number: 'REC-FAB-2026-0312',
+    receipt_type: 'custom_fabrication',
+    customer_name: 'Dr. Femi Adeleke (Adeleke Medical Holdings)',
+    customer_phone: '08034161983',
+    customer_email: 'dr.femi.adeleke@yahoo.com',
+    delivery_site_address: 'Plot 14, Admiralty Way, Lekki Phase 1, Lagos State',
+    project_title: 'Lekki Phase 1 Twin Duplex - Casement Windows & Glass Railings',
+    tracking_code: 'SIR-2026-0842',
+    architect_engineer_name: 'Arc. Emeka Okonkwo, MNIA (Studio Nexus Architecture)',
+    assigned_lead_fabricator: 'Odutola Ekundayo Idris (Chief Aluminum Systems Fabricator)',
+    total_contract_sum_ngn: 3450000,
+    payment_stage: 'deposit_70',
+    deposit_paid_ngn: 2415000,
+    balance_due_ngn: 1035000,
+    mobilization_deposit_paid_ngn: 2415000,
+    handover_balance_due_ngn: 1035000,
+    amount_paid_this_receipt_ngn: 2415000,
+    total_amount_paid_ngn: 2415000,
+    installation_included: true,
+    estimated_handover_date: 'Nov 18, 2026',
+    warranty_period: '5-Year Comprehensive Structural & Wind-Load Resistance Guarantee',
+    warranty_guarantee_clause: '5-Year Comprehensive Structural & Wind-Load Resistance Guarantee',
+    payment_method: 'bank_transfer',
+    payment_status: 'paid',
+    created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+    items: [
+      {
+        item_tag: 'Schedule W-01 to W-12',
+        description: 'Architectural Projected Casement Window Units with Multi-Point Locking & EPDM Seals',
+        dimensions: '1200mm W x 1200mm H',
+        gauge_spec: '1.5mm Heavy Duty',
+        profile_gauge: '1.5mm Heavy Duty',
+        glass_spec: '6mm Reflective Bronze Glass',
+        quantity: 12,
+        unit: 'sets',
+        unit_price_ngn: 145000,
+        total_price_ngn: 1740000,
+      },
+      {
+        item_tag: 'Schedule D-01 to D-04',
+        description: 'Heavy-Duty Sliding French Balcony Doors with Dual Roller Tracks & Thermal Gaskets',
+        dimensions: '2400mm W x 2100mm H',
+        gauge_spec: '1.8mm Profile',
+        profile_gauge: '1.8mm Profile',
+        glass_spec: '8mm Clear Toughened Safety Glass',
+        quantity: 4,
+        unit: 'sets',
+        unit_price_ngn: 225000,
+        total_price_ngn: 900000,
+      },
+      {
+        item_tag: 'Schedule GR-01',
+        description: 'Frameless Tempered Glass Balcony Railing with Marine-Grade 304 Stainless Steel Spigots',
+        dimensions: '18 Linear Meters (1000mm H)',
+        gauge_spec: '12mm Toughened',
+        profile_gauge: 'Marine Grade 304 SS',
+        glass_spec: '12mm Toughened Safety Glass',
+        quantity: 18,
+        unit: 'meters',
+        unit_price_ngn: 45000,
+        total_price_ngn: 810000,
+      },
+    ],
+  };
+
   return (
     <div>
       {/* Contractor Status Banner */}
@@ -165,11 +231,18 @@ export default function ContractorView({
           </div>
         </div>
 
-        <div style={{ textAlign: 'right' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <button
+            onClick={() => onViewReceipt(sampleFabricationReceipt)}
+            className="btn btn-outline btn-sm"
+            style={{ borderColor: '#8B5CF6', color: '#8B5CF6', display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
+            <i className="fa-solid fa-industry"></i> View Lekki Duplex Fabrication Receipt (70/30)
+          </button>
           <button
             onClick={() => onViewReceipt(sampleContractorReceipt)}
             className="btn btn-outline btn-sm"
-            style={{ borderColor: '#D4AF37', color: '#D4AF37' }}
+            style={{ borderColor: '#D4AF37', color: '#D4AF37', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
             <i className="fa-solid fa-receipt"></i> View Wholesale Material Receipt
           </button>
